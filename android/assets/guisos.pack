@@ -1,0 +1,241 @@
+
+guisos.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bg_black
+  rotate: false
+  xy: 1, 719
+  size: 720, 1280
+  orig: 720, 1280
+  offset: 0, 0
+  index: -1
+3x3
+  rotate: false
+  xy: 1, 1
+  size: 711, 716
+  orig: 720, 720
+  offset: 5, 4
+  index: -1
+bg_blue
+  rotate: false
+  xy: 723, 719
+  size: 720, 1280
+  orig: 720, 1280
+  offset: 0, 0
+  index: -1
+8x8
+  rotate: false
+  xy: 714, 5
+  size: 715, 712
+  orig: 720, 720
+  offset: 3, 5
+  index: -1
+circle
+  rotate: false
+  xy: 1445, 1727
+  size: 272, 272
+  orig: 280, 280
+  offset: 4, 4
+  index: -1
+vs
+  rotate: false
+  xy: 1445, 1550
+  size: 305, 175
+  orig: 320, 200
+  offset: 6, 13
+  index: -1
+line_blue
+  rotate: false
+  xy: 1445, 1532
+  size: 366, 16
+  orig: 366, 16
+  offset: 0, 0
+  index: -1
+line_red
+  rotate: false
+  xy: 1445, 1514
+  size: 366, 16
+  orig: 366, 16
+  offset: 0, 0
+  index: -1
+line_yellow
+  rotate: false
+  xy: 1445, 1496
+  size: 366, 16
+  orig: 366, 16
+  offset: 0, 0
+  index: -1
+o_blue
+  rotate: false
+  xy: 1719, 1846
+  size: 148, 153
+  orig: 160, 160
+  offset: 7, 4
+  index: -1
+o_red
+  rotate: false
+  xy: 1445, 1341
+  size: 148, 153
+  orig: 160, 160
+  offset: 6, 4
+  index: -1
+o_yellow
+  rotate: false
+  xy: 1445, 1186
+  size: 148, 153
+  orig: 160, 160
+  offset: 7, 4
+  index: -1
+s_yellow
+  rotate: false
+  xy: 1595, 1334
+  size: 118, 160
+  orig: 160, 160
+  offset: 21, 0
+  index: -1
+s_blue
+  rotate: false
+  xy: 1445, 1024
+  size: 117, 160
+  orig: 160, 160
+  offset: 21, 0
+  index: -1
+s_red
+  rotate: false
+  xy: 1445, 862
+  size: 117, 160
+  orig: 160, 160
+  offset: 21, 0
+  index: -1
+bttn_soundOFF
+  rotate: false
+  xy: 1869, 1872
+  size: 128, 127
+  orig: 200, 200
+  offset: 72, 0
+  index: -1
+bttn_soundON
+  rotate: false
+  xy: 1595, 1205
+  size: 128, 127
+  orig: 200, 200
+  offset: 72, 0
+  index: -1
+android
+  rotate: false
+  xy: 1445, 731
+  size: 110, 129
+  orig: 120, 143
+  offset: 6, 6
+  index: -1
+android_new
+  rotate: false
+  xy: 1715, 1365
+  size: 110, 129
+  orig: 120, 143
+  offset: 5, 9
+  index: -1
+player
+  rotate: false
+  xy: 1719, 1732
+  size: 101, 112
+  orig: 116, 122
+  offset: 7, 5
+  index: -1
+bttn_back
+  rotate: false
+  xy: 1725, 1267
+  size: 96, 96
+  orig: 100, 100
+  offset: 2, 2
+  index: -1
+bttn_android
+  rotate: false
+  xy: 1752, 1633
+  size: 84, 97
+  orig: 100, 100
+  offset: 8, 2
+  index: -1
+bttn_replay
+  rotate: false
+  xy: 1725, 1169
+  size: 96, 96
+  orig: 100, 100
+  offset: 2, 2
+  index: -1
+bttn_settings
+  rotate: false
+  xy: 1822, 1749
+  size: 95, 95
+  orig: 100, 100
+  offset: 2, 3
+  index: -1
+bttn_help
+  rotate: false
+  xy: 1838, 1656
+  size: 90, 91
+  orig: 100, 100
+  offset: 4, 4
+  index: -1
+crown
+  rotate: false
+  xy: 1752, 1578
+  size: 70, 53
+  orig: 100, 100
+  offset: 16, 24
+  index: -1
+bttn_vsplay
+  rotate: false
+  xy: 1564, 1094
+  size: 81, 90
+  orig: 100, 100
+  offset: 10, 5
+  index: -1
+bttn_credits
+  rotate: false
+  xy: 1564, 1003
+  size: 88, 89
+  orig: 100, 100
+  offset: 6, 6
+  index: -1
+
+guisos2.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+6x6
+  rotate: false
+  xy: 1, 1069
+  size: 713, 713
+  orig: 720, 720
+  offset: 4, 5
+  index: -1
+5x5
+  rotate: false
+  xy: 1, 360
+  size: 710, 707
+  orig: 720, 720
+  offset: 4, 7
+  index: -1
+4x4
+  rotate: false
+  xy: 716, 1087
+  size: 705, 695
+  orig: 720, 720
+  offset: 8, 15
+  index: -1
+main_menu_decoration
+  rotate: false
+  xy: 716, 698
+  size: 720, 387
+  orig: 720, 400
+  offset: 0, 13
+  index: -1
+7x7
+  rotate: false
+  xy: 713, 1
+  size: 699, 695
+  orig: 720, 720
+  offset: 13, 14
+  index: -1
