@@ -14,20 +14,6 @@ public class Random implements Strategy {
     static String  strategy;
     Cell.CellValue cV;
 
-
-    static void setStrategy( ){
-        strategy="EASY";
-    }
-
-    public String getStrategy(){
-        return strategy;
-    }
-
-    @Override
-    public void setStrategy(String st) {
-        st="EASY";
-    }
-
     public CellPosition determineBestPosition(Board board) {
         List<CellPosition> availableCells;
         availableCells = board.emptyCellPositions();
@@ -38,11 +24,14 @@ public class Random implements Strategy {
     @Override
     public Cell.CellValue determineValue(Board board) {
         cV= Cell.CellValue.EMPTY;
+
         int randomIndex=  MathUtils.random(1,3);
-        if(randomIndex==1)
+
+        if((randomIndex%2)!=0)
             cV= Cell.CellValue.O_cell;
-        else if(randomIndex==2)
+        else
             cV= Cell.CellValue.S_cell;
+
         return cV;
     }
 }

@@ -10,7 +10,4 @@ import com.mygdx.game.board.CellPosition;
 public interface Strategy {
     CellPosition determineBestPosition(Board board);
     Cell.CellValue determineValue(Board board);
-    void setStrategy(String st);
-    String getStrategy();
-
 }

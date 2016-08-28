@@ -2,6 +2,7 @@ package com.mygdx.game.stages;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -16,12 +17,9 @@ import com.mygdx.game.SOSGame;
 
 import java.util.LinkedList;
 
-public class Transition extends Screens  {
-    public boolean forward=false;
-    public enum boardSizes{
-        THREE,FOUR,FIVE,SEVEN,SIX,EIGHT
-    }
-    public static boardSizes TheBoardSize;
+public class Transition extends ScreenAdapter {
+
+    final SOSGame game;
 
     private static Sprite Black_bg;
     private Stage transition_stage;
@@ -31,18 +29,17 @@ public class Transition extends Screens  {
     private LinkedList<TextButton> textButtons;
     private TextButton btn1,btn2,btn3,btn4,btn5;
 
-    private boolean b1=false;
-    private boolean b2=false;
-    private boolean b3=false;
-    private boolean b4=false;
-    private boolean b5=false;
-
     public static Sprite ThreeBoard,FourBoard,FiveBoard,SevenBoard,SixBoard,EightBoard;
 
     private Skin skin;
     private TextureAtlas atlas;
 
-    public Transition( ){
+    public static VS_GameScreen VS;
+
+    public Transition(final SOSGame game){
+        this.game=game;
+
+
         transition_stage=new Stage(SOSGame.view,SOSGame.batch);
         transitionGroup=new Group();
         textButtons=new LinkedList<TextButton>();
@@ -89,59 +86,134 @@ public class Transition extends Screens  {
             textButtons.get(i).setWidth((SOSGame.WIDTH/100)*26);
             y=y+(SOSGame.HEIGHT/100)*11;
         }
-        transitionGroup.addListener(new ClickListener() {
-            @Override
-            public boolean touchDown(InputEvent event,
-            float x,
-            float y,
-            int pointer,
-            int button){
 
-                if(btn1.isPressed()){
-                    System.out.println("FOUR");
-                    setBoardSize(boardSizes.FOUR);
-                    System.out.println("BOARD SIZE IS "+ getBoardSize());
-                    b1=true;
-                    forward=true;
-                }
-                else if(btn2.isPressed()){
-                    setBoardSize(boardSizes.FIVE);
-                    System.out.println("BOARD SIZE IS "+ getBoardSize());
-                    b2=true;
-                    forward=true;
-                }else if(btn3.isPressed()){
-                    setBoardSize(boardSizes.SIX);
-                    System.out.println("BOARD SIZE IS "+ getBoardSize());
-                    forward=true;
-                    b3=true;
-                }else if(btn4.isPressed()){
-                    setBoardSize(boardSizes.SEVEN);
-                    System.out.println("BOARD SIZE IS "+ getBoardSize());
-                    forward=true;
-                    b4=true;
-                }else if(btn5.isPressed()){
-                    setBoardSize(boardSizes.EIGHT);
-                    b5=true;
-                    System.out.println("BOARD SIZE IS "+ getBoardSize());
-                    forward=true;
-                }else{
-                    setBoardSize(boardSizes.THREE);
-                    System.out.println("BOARD SIZE IS "+ getBoardSize());
-                    forward=false;
-                }
-                return false;
-            }
-        });
         transition_stage.addActor(transitionGroup);
+
         ThreeBoard=new Sprite(atlas.createSprite("3x3"));
         FourBoard= new Sprite(atlas.createSprite("4x4"));
         FiveBoard= new Sprite(atlas.createSprite("5x5"));
         SixBoard= new Sprite(atlas.createSprite("6x6"));
         SevenBoard= new Sprite(atlas.createSprite("7x7"));
         EightBoard=new Sprite(atlas.createSprite("8x8"));
-    }
 
-    public void render( ) {
+        transitionGroup.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event,
+                                     float x,
+                                     float y,
+                                     int pointer,
+                                     int button){
+
+                if(btn1.isPressed()){
+                    VS_GameScreen.THEBOARD=FourBoard;
+                    VS_GameScreen.row=4;
+                    VS_GameScreen.column=4;
+                    VS_GameScreen.MAX_MOVES=16;
+
+                    Solo_Game_screen.THEBOARD=FourBoard;
+                    Solo_Game_screen.row=4;
+                    Solo_Game_screen.column=4;
+                    Solo_Game_screen.MAX_MOVES=16;
+
+                    if(Main_Menu.change==1)
+                    {
+                        game.setScreen(new Solo_Game_screen(game));
+                    }
+                    if(Main_Menu.change==2)
+                    {
+                        VS= new VS_GameScreen(game);
+                        game.setScreen(VS);
+                    }
+
+                }
+                else if(btn2.isPressed()){
+                    VS_GameScreen.THEBOARD=FiveBoard;
+                    VS_GameScreen.row=5;
+                    VS_GameScreen.column=5;
+                    VS_GameScreen.MAX_MOVES=25;
+
+                    Solo_Game_screen.THEBOARD=FiveBoard;
+                    Solo_Game_screen.row=5;
+                    Solo_Game_screen.column=5;
+                    Solo_Game_screen.MAX_MOVES=25;
+
+                    if(Main_Menu.change==1)
+                    {
+                        game.setScreen(new Solo_Game_screen(game));
+                    }
+                    if(Main_Menu.change==2)
+                    {
+                        VS= new VS_GameScreen(game);
+                        game.setScreen(VS);
+                    }
+                }else if(btn3.isPressed()){
+                    VS_GameScreen.THEBOARD=SixBoard;
+                    VS_GameScreen.row=6;
+                    VS_GameScreen.column=6;
+                    VS_GameScreen.MAX_MOVES=36;
+
+                    Solo_Game_screen.THEBOARD=SixBoard;
+                    Solo_Game_screen.row=6;
+                    Solo_Game_screen.column=6;
+                    Solo_Game_screen.MAX_MOVES=36;
+
+                    if(Main_Menu.change==1)
+                    {
+                        game.setScreen(new Solo_Game_screen(game));
+                    }
+                    if(Main_Menu.change==2)
+                    {
+                        VS= new VS_GameScreen(game);
+                        game.setScreen(VS);
+                    }
+                }else if(btn4.isPressed()){
+                    VS_GameScreen.THEBOARD=SevenBoard;
+                    VS_GameScreen.row=7;
+                    VS_GameScreen.column=7;
+                    VS_GameScreen.MAX_MOVES=49;
+
+                    Solo_Game_screen.THEBOARD=SevenBoard;
+                    Solo_Game_screen.row=7;
+                    Solo_Game_screen.column=7;
+                    Solo_Game_screen.MAX_MOVES=49;
+
+                    if(Main_Menu.change==1)
+                    {
+                        game.setScreen(new Solo_Game_screen(game));
+                    }
+                    if(Main_Menu.change==2)
+                    {
+                        VS= new VS_GameScreen(game);
+                        game.setScreen(VS);
+                    }
+                }else if(btn5.isPressed()){
+                    VS_GameScreen.THEBOARD=EightBoard;
+                    VS_GameScreen.row=8;
+                    VS_GameScreen.column=8;
+                    VS_GameScreen.MAX_MOVES=64;
+
+                    Solo_Game_screen.THEBOARD=EightBoard;
+                    Solo_Game_screen.row=8;
+                    Solo_Game_screen.column=8;
+                    Solo_Game_screen.MAX_MOVES=64;
+
+                    if(Main_Menu.change==1)
+                    {
+                        game.setScreen(new Solo_Game_screen(game));
+                    }
+                    if(Main_Menu.change==2)
+                    {
+                        VS= new VS_GameScreen(game);
+                        game.setScreen(VS);
+                    }
+                }
+                return false;
+            }
+        });
+
+    }
+    public void render(float deltaTime ) {
+
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(transition_stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -153,51 +225,6 @@ public class Transition extends Screens  {
         SOSGame.batch.end();
 
         transition_stage.draw();
-
-        if(b1)
-        {
-            VS_GameScreen.THEBOARD=FourBoard;
-            VS_GameScreen.row=4;
-            VS_GameScreen.column=4;
-            VS_GameScreen.MAX_MOVES=16;
-        }
-        if(b2)
-        {
-            VS_GameScreen.THEBOARD=FiveBoard;
-            VS_GameScreen.row=5;
-            VS_GameScreen.column=5;
-            VS_GameScreen.MAX_MOVES=25;
-        }
-        if(b3)
-        {
-            VS_GameScreen.THEBOARD=SixBoard;
-            VS_GameScreen.row=6;
-            VS_GameScreen.column=6;
-            VS_GameScreen.MAX_MOVES=36;
-        }
-        if(b4)
-        {
-            VS_GameScreen.THEBOARD=SevenBoard;
-            VS_GameScreen.row=7;
-            VS_GameScreen.column=7;
-            VS_GameScreen.MAX_MOVES=49;
-        }
-        if(b5)
-        {
-            VS_GameScreen.THEBOARD=EightBoard;
-            VS_GameScreen.row=8;
-            VS_GameScreen.column=8;
-            VS_GameScreen.MAX_MOVES=64;
-        }
-
-
-
-    }
-    public static boardSizes getBoardSize()
-    {return TheBoardSize;}
-    public static void setBoardSize(boardSizes sp)
-    {
-        TheBoardSize=sp;
     }
     public void dispose() {
         transition_stage.dispose();

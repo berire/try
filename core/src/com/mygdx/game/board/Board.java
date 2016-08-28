@@ -94,48 +94,45 @@ public class Board {
         System.out.println("CROSSED ıs called");
         for (int a = 0; a < this.row; a++) // for every row
         {
-            int g=0;
-            System.out.println("IN FOR");
-            while((g+2)<this.column)
+            for(int g=0; g<this.column; g++)
+
+            if((g+2)<this.column)
             {
                 if ((cells[a][g]).getValue() == Cell.CellValue.S_cell && (cells[a][g + 1]).getValue() == Cell.CellValue.O_cell && (cells[a][g + 2]).getValue() == Cell.CellValue.S_cell)
                 {
-                     System.out.println("IN IF");
+                    System.out.println("IN IF");
 
                     (cells[a][g]).crossCell();
-                    (cells[a][g]).setDegree(Cell.CrossDegree.FL);
+                    (cells[a][g]).setDegree(Cell.CrossDegree.UD);
 
                     (cells[a][g + 1]).crossCell();
-                    (cells[a][g + 1]).setDegree(Cell.CrossDegree.FL);
+                    (cells[a][g + 1]).setDegree(Cell.CrossDegree.UD);
 
                     (cells[a][g + 2]).crossCell();
-                    (cells[a][g + 2]).setDegree(Cell.CrossDegree.FL);
+                    (cells[a][g + 2]).setDegree(Cell.CrossDegree.UD);
                 }
-                g++;
-
             }
 
         }
-        for (int g = 0; g < this.column; g++) // for every column
+        for (int a = 0; a < this.row; a++) // for every column
         {
-            int a = 0;
-            while ((a+2) < this.row)
+            for(int g=0; g< this.column; g++)
+            if ((a+2) < this.column)
             {
                 if ((cells[a][g]).getValue() == Cell.CellValue.S_cell && cells[a + 1][g].getValue() == Cell.CellValue.O_cell && cells[a + 2][g].getValue() == Cell.CellValue.S_cell) {
 
                     System.out.println("IN IF");
 
                     cells[a][g].crossCell();
-                    cells[a][g].setDegree(Cell.CrossDegree.UD);
+                    cells[a][g].setDegree(Cell.CrossDegree.FL);
 
                     cells[a + 1][g].crossCell();
-                    cells[a + 1][g].setDegree(Cell.CrossDegree.UD);
+                    cells[a + 1][g].setDegree(Cell.CrossDegree.FL);
 
                     cells[a + 2][g].crossCell();
-                    cells[a + 2][g].setDegree(Cell.CrossDegree.UD);
+                    cells[a + 2][g].setDegree(Cell.CrossDegree.FL);
 
                 }
-                a++;
             }
         }
         for (int i = 0; i < this.row; i++) {

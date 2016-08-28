@@ -2,9 +2,11 @@ package com.mygdx.game.stages;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -20,9 +22,11 @@ import java.util.LinkedList;
 /**
  * Created by user on 8.8.2016.
  */
-public class Main_Menu {
+public class Main_Menu extends ScreenAdapter {
+    public SOSGame game;
+    Rectangle soundBounds;
+
     public Stage menu_stage;
-    public Boolean b1=false;Boolean b2=false;Boolean b3=false;Boolean b4=false;Boolean b5=false;Boolean b6=false;
     public static int change=0;
 
     private Skin skin;
@@ -35,8 +39,12 @@ public class Main_Menu {
     private ImageButton Solo_btn,VS_btn,settings_btn,credits_btn,help_btn,sound_btn;
     private LinkedList<Button> menu_btns;
 
-    private VS_GameScreen VS;
-    public Main_Menu() {
+
+
+    public Main_Menu(final SOSGame game) {
+        this.game=game;
+        soundBounds = new Rectangle(0, 0, 64, 64);
+
         menu_stage=new Stage(SOSGame.view,SOSGame.batch);
         menuGroup=new Group();
         menu_btns=new LinkedList<Button>();
@@ -94,37 +102,45 @@ public class Main_Menu {
                                      int button){
                 if(Solo_btn.isPressed()){
                     change=1;
-                    Helper.getInstance().fl=1;
-                    Helper.getInstance().screen= Helper.ScreenType.SOLO;
+                    if(Helper.getInstance().fl==1){
+                        game.setScreen(new Transition(game));
+                        Helper.instance.fl=2;
+                    }
+                    else if(Helper.getInstance().fl==2 ){
+                        game.setScreen(new Solo_Game_screen(game));}
                 }
-                else if(VS_btn.isPressed()){
-                    b2=true;
+                if(VS_btn.isPressed()){
                     change=2;
-                    VS=new VS_GameScreen();
+                    //Assets.playSound(Assets.clickSound);
+                    if(Helper.getInstance().fl==1){
+                        game.setScreen(new Transition(game));
+                        Helper.instance.fl=2;
+                    }
+                    else if(Helper.getInstance().fl==2 ){
+                        game.setScreen(Transition.VS);}
+                }if(settings_btn.isPressed()){
 
-
-                    //Helper.getInstance().fl=1;
-                    //Helper.getInstance().screen= Helper.ScreenType.VS;
-                }else if(settings_btn.isPressed()){
-                    b3=true;
-                    change=0;
                 }else if(credits_btn.isPressed()){
-                    change=0;
-                    b4=true;
+
                 }else if(help_btn.isPressed()){
-                    change=0;
-                    b5=true;
+
                 }else if(sound_btn.isPressed()) {
-                    change=0;
-                    b6=true;
+                    /*Assets.playSound(Assets.clickSound);
+                    Settings.soundEnabled = !Settings.soundEnabled;
+                    if (Settings.soundEnabled)
+                        Assets.music.play();
+                    else
+                        Assets.music.pause();*/
                 }
                 return false;
             }
         });
+
+
     }
 
-    public void render() {
 
+    public void render(float delta) {
         menu_stage.addActor(menuGroup);
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(menu_stage);
@@ -132,19 +148,18 @@ public class Main_Menu {
 
         menu_stage.act(Gdx.graphics.getDeltaTime());
 
+        game.batch.disableBlending();
         SOSGame.batch.begin();
         SOSGame.batch.draw(background,0,0);
+        SOSGame.batch.end();
+
+        game.batch.enableBlending();
+        SOSGame.batch.begin();
         SOSGame.batch.draw(SOS_textField,0,(SOSGame.HEIGHT/100)*64,SOSGame.WIDTH , (SOSGame.HEIGHT/100)*25);
+        //game.batch.draw(Settings.soundEnabled ? Assets.soundOn : Assets.soundOff, 0, 0, 64, 64);
         SOSGame.batch.end();
 
         menu_stage.draw();
-
-        if(b2){
-            VS_GameScreen.trans.render();
-            if(VS_GameScreen.trans.forward)
-            { VS_GameScreen.trans.dispose();
-                VS.render();}
-        }
     }
 
     public void dispose() {

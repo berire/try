@@ -2,6 +2,7 @@ package com.mygdx.game.stages;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -19,7 +20,6 @@ import com.mygdx.game.SOSGame;
 import com.mygdx.game.board.Board;
 import com.mygdx.game.board.Cell;
 import com.mygdx.game.board.CellPosition;
-import com.mygdx.game.helper.Helper;
 import com.mygdx.game.player.Player;
 
 import java.util.LinkedList;
@@ -27,7 +27,11 @@ import java.util.LinkedList;
 /**
  * Created by user on 8.8.2016.
  */
-public class VS_GameScreen{
+public class VS_GameScreen extends ScreenAdapter{
+    SOSGame game;
+    static final int GAME_FINISHED =1;
+    private int state;
+
     //GUI VALUES
     private Skin skin;
     private TextureAtlas atlas;
@@ -46,12 +50,6 @@ public class VS_GameScreen{
     private LinkedList<Button> buttons;
     private Button CELLS [][] ;
 
-    //PREVIOUS SCREEN
-    public static Transition trans;
-
-    //NEXT SCREEN
-    private static Boolean back=false;
-
     //GAME VALUES
     Player p1,p2;
     Results results;
@@ -65,8 +63,8 @@ public class VS_GameScreen{
     public static int MAX_MOVES;
     Cell.CellValue choosenValue;
 
-    public VS_GameScreen( ) {
-        System.out.println("VS CREATED");
+    public VS_GameScreen(SOSGame game ) {
+        this.game=game;
         //START: GUI PART
         vs_stage=new Stage(SOSGame.view,SOSGame.batch);
         cross_stage=new Stage(SOSGame.view,SOSGame.batch);
@@ -78,7 +76,6 @@ public class VS_GameScreen{
         actorGroup=new Group();
         cellGroup=new Group();
 
-        /////////////////BOARD SIZE ALLIGNMENT
         main_font=new BitmapFont(Gdx.files.internal("thefont.fnt"));
 
         //STABLE Texture Loading
@@ -128,18 +125,10 @@ public class VS_GameScreen{
         S_blue.setSize((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
         actorGroup.addActor(S_blue);
 
-        THEBOARD=ThreeBoard;
-        row=3; column=3; MAX_MOVES=9;
+        ////////BOARD SIZED AGAIN
         THEBOARD.setSize((SOSGame.WIDTH/100)*105 , (SOSGame.HEIGHT/100)*40);
 
-        trans=new Transition();
-        trans.render();
-        createDinamics();
-
-    }
-    public void createDinamics()
-
-    {//CELLS-BUTTONS CREATION
+        //CELLS-BUTTONS CREATION
         for (int a=0; a<MAX_MOVES; a++)
         {
             ImageButton btn = new ImageButton(skin.getDrawable("crown"));
@@ -180,13 +169,7 @@ public class VS_GameScreen{
     }
 
     public void playSolo( ) {
-        /*//choose hardness level
-        if(Settings_Menu.difficulty=="EASY")
-        {
-            Random.setStrategy( );
-        }else if(Settings_Menu.difficulty=="HARD") {
-            Rule_Based.setStrategy( );
-        }*/
+
         System.out.println("PLAY SOLO");
 
         board = new Board(row, column);
@@ -203,14 +186,19 @@ public class VS_GameScreen{
                                      int pointer,
                                      int button) {
                 if (O_blue.isPressed()) {
+                    //Assets.playSound(Assets.hitSound);
+
                     choosenValue = Cell.CellValue.O_cell;
                     Button.ButtonStyle red_O = new Button.ButtonStyle(skin.getDrawable("o_red"), skin.getDrawable("o_red"), skin.getDrawable("o_red"));
                     ImageButton.ImageButtonStyle Ostyle = new ImageButton.ImageButtonStyle(red_O);
                     O_blue.setStyle(Ostyle);
+                    O_blue.setSize((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
+
 
                     Button.ButtonStyle blue_S = new Button.ButtonStyle(skin.getDrawable("s_blue"), skin.getDrawable("s_blue"), skin.getDrawable("s_blue"));
                     ImageButton.ImageButtonStyle BLUEstyleS = new ImageButton.ImageButtonStyle(blue_S);
                     S_blue.setStyle(BLUEstyleS);
+                    S_blue.setSize((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
 
 
                 } else if (S_blue.isPressed()) {
@@ -218,19 +206,19 @@ public class VS_GameScreen{
                     Button.ButtonStyle red_S = new Button.ButtonStyle(skin.getDrawable("s_red"), skin.getDrawable("s_red"), skin.getDrawable("s_red"));
                     ImageButton.ImageButtonStyle Sstyle = new ImageButton.ImageButtonStyle(red_S);
                     S_blue.setStyle(Sstyle);
+                    S_blue.setSize((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
 
                     Button.ButtonStyle blue_O = new Button.ButtonStyle(skin.getDrawable("o_blue"), skin.getDrawable("o_blue"), skin.getDrawable("o_blue"));
                     ImageButton.ImageButtonStyle BLUEstyleO = new ImageButton.ImageButtonStyle(blue_O);
                     O_blue.setStyle(BLUEstyleO);
+                    O_blue.setSize((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
 
                 }else if(backButton.isPressed())
                 {
-                    Helper.getInstance().screen= Helper.ScreenType.MAIN;
-                    Helper.getInstance().fl=1;
-                    back=true;
+                    game.setScreen(new Main_Menu(game));
                 }else if(renewButton.isPressed())
                 {
-                    board = new Board(row, column);
+                    game.setScreen(new Transition(game));
                 }
                 else {
                     System.out.println("Choose A Cell Value");
@@ -262,10 +250,12 @@ public class VS_GameScreen{
                                         Button.ButtonStyle O_style = new Button.ButtonStyle(skin.getDrawable("o_yellow"), skin.getDrawable("o_yellow"), skin.getDrawable("o_yellow"));
                                         ImageButton.ImageButtonStyle style1 = new ImageButton.ImageButtonStyle(O_style);
                                         CELLS[i][g].setStyle(style1);
+                                        CELLS[i][g].setSize((THEBOARD.getHeight()/row),(THEBOARD.getHeight()/column));
                                     } else if (choosenValue == Cell.CellValue.S_cell) {
                                         Button.ButtonStyle S_style = new Button.ButtonStyle(skin.getDrawable("s_yellow"), skin.getDrawable("s_yellow"), skin.getDrawable("s_yellow"));
                                         ImageButton.ImageButtonStyle style2 = new ImageButton.ImageButtonStyle(S_style);
                                         CELLS[i][g].setStyle(style2);
+                                        CELLS[i][g].setSize((THEBOARD.getHeight()/row),(THEBOARD.getHeight()/column));
                                     }
                                     board.CROSS( );
                                     System.out.println("CELL POSITION "+cellPosition+" IS CROSSED "+ board.cells[i][g].ISCrossed());
@@ -274,8 +264,8 @@ public class VS_GameScreen{
                                         p1.SCORE();
                                     }
                                     countofMoves++;
-                                    Crossing(lineYellow);
                                     currentPlayer=p2;
+                                    Crossing(lineYellow);
 
                                 }
                                 else if(currentPlayer == p2)
@@ -288,10 +278,12 @@ public class VS_GameScreen{
                                         Button.ButtonStyle O_style1 = new Button.ButtonStyle(skin.getDrawable("o_blue"), skin.getDrawable("o_blue"), skin.getDrawable("o_blue"));
                                         ImageButton.ImageButtonStyle style3 = new ImageButton.ImageButtonStyle(O_style1);
                                         CELLS[i][g].setStyle(style3);
+                                        CELLS[i][g].setSize((THEBOARD.getHeight()/row),(THEBOARD.getHeight()/column));
                                     } else if (choosenValue == Cell.CellValue.S_cell) {
                                         Button.ButtonStyle S_style1 = new Button.ButtonStyle(skin.getDrawable("s_blue"), skin.getDrawable("s_blue"), skin.getDrawable("s_blue"));
                                         ImageButton.ImageButtonStyle style4 = new ImageButton.ImageButtonStyle(S_style1);
                                         CELLS[i][g].setStyle(style4);
+                                        CELLS[i][g].setSize((THEBOARD.getHeight()/row),(THEBOARD.getHeight()/column));
                                     }
                                     board.CROSS();
                                     System.out.println("CELL POSITION "+cellPosition+" IS CROSSED "+ board.cells[i][g].ISCrossed());
@@ -300,27 +292,14 @@ public class VS_GameScreen{
                                         p2.SCORE();
                                     }
                                     countofMoves++;
-
-                                    Crossing(lineBlue);
                                     currentPlayer=p1;
+                                    Crossing(lineBlue);
                                 }
 
                             }
-                            if(results.getResults()== Results.state.WINNER)
+                            if(results.getResults()== Results.state.WINNER||results.getResults()== Results.state.DRAW)
                             {
-                                if(results.getWinner()==p1)
-                                {
-                                    //humanPlayer1.set();
-
-                                }
-                                else if(results.getWinner()== p2)
-                                {
-                                    //humanPlayer2.set()
-                                }
-                            }
-                            else if(results.getResults()== Results.state.DRAW)
-                            {
-
+                                state = GAME_FINISHED;
                             }
                         }
                     }
@@ -342,45 +321,47 @@ public class VS_GameScreen{
                 if (board.cells[i][g].ISCrossed()) {
                     if(board.cells[i][g].getDegree()== Cell.CrossDegree.CR_D )
                     {
+                        System.out.println("CR_D");
                         Image image1=new Image(new SpriteDrawable(sp));
-                        image1.setOrigin((CELLS[i][g].getX()),((CELLS[i][g].getY())));
+                        image1.setOrigin(image1.getImageWidth()/2f, image1.getImageHeight()/2f);
                         image1.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
-                        image1.setPosition((CELLS[i][g].getX()),((CELLS[i][g].getY())));
-                        //image1.rotateBy((float)45.0);
+                        image1.setPosition((CELLS[i][g].getX())+15,((CELLS[i][g].getY())));
+                        image1.rotateBy((float)45.0);
                         cross_stage.addActor(image1);
                     }
                     if(board.cells[i][g].getDegree()== Cell.CrossDegree.CR_U)
                     {
+                        System.out.println("CR_u");
                         Image image4=new Image(new SpriteDrawable(sp));
-                        image4.setOrigin((CELLS[i][g].getX()),((CELLS[i][g].getY())));
+                        image4.setOrigin(image4.getImageWidth()/2f, image4.getImageHeight()/2f);
                         image4.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
                         image4.setPosition((CELLS[i][g].getX()),((CELLS[i][g].getY())));
-                        //image4.rotateBy((float)135.0);
+                        image4.rotateBy((float)135.0);
                         cross_stage.addActor(image4);
                     }
                     if(board.cells[i][g].getDegree()== Cell.CrossDegree.FL)
                     {
+                        System.out.println("FL");
                         Image image2=new Image(new SpriteDrawable(sp));
                         image2.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
                         image2.setPosition((CELLS[i][g].getX()),((CELLS[i][g].getY())));
-                        //image2.rotateBy((float)180.0);
+                        image2.rotateBy((float)180.0);
                         cross_stage.addActor(image2);
                     }
                     if(board.cells[i][g].getDegree()== Cell.CrossDegree.UD)
                     {
+                        System.out.println("UD");
                         Image image3=new Image(new SpriteDrawable(sp));
-                        image3.setOrigin((CELLS[i][g].getX()),((CELLS[i][g].getY())));
+                        image3.setOrigin(image3.getImageWidth()/2f, image3.getImageHeight()/2f);
                         image3.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
                         image3.setPosition((CELLS[i][g].getX()),((CELLS[i][g].getY())));
-                        //image3.rotateBy((float)90.0);
+                        image3.rotateBy((float)90.0);
                         cross_stage.addActor(image3);
                     }
                 }}}
     }
 
-
-
-    public void render ( ) {
+    public void render ( float delta) {
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(vs_stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -404,6 +385,5 @@ public class VS_GameScreen{
 
     public void dispose () {
         vs_stage.dispose();
-
     }
 }
