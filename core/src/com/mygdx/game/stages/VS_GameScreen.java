@@ -3,6 +3,7 @@ package com.mygdx.game.stages;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -29,9 +30,6 @@ import java.util.LinkedList;
  */
 public class VS_GameScreen extends ScreenAdapter{
     SOSGame game;
-    static final int GAME_FINISHED =1;
-    private int state;
-
     //GUI VALUES
     private Skin skin;
     private TextureAtlas atlas;
@@ -44,6 +42,7 @@ public class VS_GameScreen extends ScreenAdapter{
     public static Sprite THEBOARD;
     private Sprite Black_bg,ThreeBoard,FourBoard,FiveBoard,SevenBoard,SixBoard,EightBoard,humanPlayer1,humanPlayer2,vs;
     private Sprite lineBlue,lineYellow;
+    private Image crown;
 
     //Game-Gui Variables
     private ImageButton O_blue,S_blue,backButton,renewButton;
@@ -51,10 +50,11 @@ public class VS_GameScreen extends ScreenAdapter{
     private Button CELLS [][] ;
 
     //GAME VALUES
-    Player p1,p2;
+    Player p1,p2,winner;
     Results results;
     static Player currentPlayer;
-    String player_name="Deneme";
+    String playerName1="ALI";
+    String playerName2= "VELI";
     static int countofMoves=0;
     Board board;
     public static int row;
@@ -62,6 +62,9 @@ public class VS_GameScreen extends ScreenAdapter{
     CellPosition cellPosition;
     public static int MAX_MOVES;
     Cell.CellValue choosenValue;
+
+    private int score1,score2;
+    private String ScoreName1,ScoreName2;
 
     public VS_GameScreen(SOSGame game ) {
         this.game=game;
@@ -87,6 +90,8 @@ public class VS_GameScreen extends ScreenAdapter{
 
         humanPlayer2 = new Sprite(atlas.createSprite("player"));
         humanPlayer2.setSize((SOSGame.WIDTH/100)*13 , (SOSGame.HEIGHT/100)*13);
+
+        crown=new Image(new Sprite(atlas.createSprite("crown")));
 
         vs =  new Sprite(atlas.createSprite("vs"));
         vs.setSize((SOSGame.WIDTH/100)*13 , (SOSGame.HEIGHT/100)*13);
@@ -178,6 +183,10 @@ public class VS_GameScreen extends ScreenAdapter{
         countofMoves = 0;
         currentPlayer=p1;
 
+
+        score1 = 0; score2=0;
+        ScoreName1 = "score: 0"; ScoreName2 = "score: 0";
+
         actorGroup.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event,
@@ -261,6 +270,8 @@ public class VS_GameScreen extends ScreenAdapter{
                                     System.out.println("CELL POSITION "+cellPosition+" IS CROSSED "+ board.cells[i][g].ISCrossed());
                                     if(board.cellAtPosition(cellPosition).ISCrossed())
                                     {
+                                        score1++;
+                                        ScoreName1 = "score: " + score1;
                                         p1.SCORE();
                                     }
                                     countofMoves++;
@@ -289,6 +300,8 @@ public class VS_GameScreen extends ScreenAdapter{
                                     System.out.println("CELL POSITION "+cellPosition+" IS CROSSED "+ board.cells[i][g].ISCrossed());
                                     if(board.cellAtPosition(cellPosition).ISCrossed())
                                     {
+                                        score2++;
+                                        ScoreName2 = "score: " + score2;
                                         p2.SCORE();
                                     }
                                     countofMoves++;
@@ -297,12 +310,26 @@ public class VS_GameScreen extends ScreenAdapter{
                                 }
 
                             }
-                            if(results.getResults()== Results.state.WINNER||results.getResults()== Results.state.DRAW)
-                            {
-                                state = GAME_FINISHED;
-                            }
+
                         }
                     }
+
+                if(results.ISgameOver()==true)
+                {
+                    winner=results.getWinner();
+                    if(winner==p1)
+                    {
+                        crown.setSize((SOSGame.WIDTH/100)*13  , (SOSGame.HEIGHT/100)*5);
+                        crown.setPosition((SOSGame.WIDTH/100)*25,(SOSGame.HEIGHT/100)*95);
+                        actorGroup.addActor(crown);
+
+                    }else if(winner==p2)
+                    {
+                        crown.setSize((SOSGame.WIDTH/100)*13  , (SOSGame.HEIGHT/100)*5);
+                        crown.setPosition((SOSGame.WIDTH/100)*85,(SOSGame.HEIGHT/100)*95);
+                        actorGroup.addActor(crown);
+                    }
+                }
                 return false;
             }
 
@@ -362,6 +389,7 @@ public class VS_GameScreen extends ScreenAdapter{
     }
 
     public void render ( float delta) {
+
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(vs_stage);
         Gdx.input.setInputProcessor(inputMultiplexer);
@@ -376,6 +404,15 @@ public class VS_GameScreen extends ScreenAdapter{
         SOSGame.batch.draw(humanPlayer1,(SOSGame.WIDTH/100)*25,(SOSGame.HEIGHT/100)*87,(SOSGame.WIDTH/100)*13  , (SOSGame.HEIGHT/100)*13);
         SOSGame.batch.draw(vs,(SOSGame.WIDTH/100)*55,(SOSGame.HEIGHT/100)*87,(SOSGame.WIDTH/100)*13  , (SOSGame.HEIGHT/100)*13);
         SOSGame.batch.draw(humanPlayer2,(SOSGame.WIDTH/100)*85,(SOSGame.HEIGHT/100)*87,(SOSGame.WIDTH/100)*13  , (SOSGame.HEIGHT/100)*13);
+
+        main_font.setColor(0,(float)96.9,(float)100,(float)60);
+        main_font.setColor(Color.YELLOW);
+        main_font.draw(SOSGame.batch,ScoreName1,(SOSGame.WIDTH/100)*13,(SOSGame.HEIGHT/100)*84);
+        main_font.draw(SOSGame.batch,playerName1,(SOSGame.WIDTH/100)*8,(SOSGame.HEIGHT/100)*84);
+
+        main_font.setColor(0,(float)42,(float)83.9,(float)84.3);
+        main_font.draw(SOSGame.batch,ScoreName2,(SOSGame.WIDTH/100)*74,(SOSGame.HEIGHT/100)*84);
+        main_font.draw(SOSGame.batch,playerName2,(SOSGame.WIDTH/100)*68,(SOSGame.HEIGHT/100)*84);
 
         SOSGame.batch.end();
 

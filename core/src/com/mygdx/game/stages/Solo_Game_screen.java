@@ -223,7 +223,7 @@ public class Solo_Game_screen extends ScreenAdapter {
                     game.setScreen(new Main_Menu(game));
                 }else if(renewButton.isPressed())
                 {
-                    state = GAME_RENEWED;
+                    game.setScreen(new Transition(game));
                 }
                 else {
                     System.out.println("Choose A Cell Value");

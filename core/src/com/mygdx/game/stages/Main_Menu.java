@@ -104,17 +104,16 @@ public class Main_Menu extends ScreenAdapter {
                     change=1;
                     if(Helper.getInstance().fl==1){
                         game.setScreen(new Transition(game));
-                        Helper.instance.fl=2;
                     }
                     else if(Helper.getInstance().fl==2 ){
-                        game.setScreen(new Solo_Game_screen(game));}
+                        game.setScreen(Transition.SOLO);}
                 }
                 if(VS_btn.isPressed()){
                     change=2;
                     //Assets.playSound(Assets.clickSound);
                     if(Helper.getInstance().fl==1){
                         game.setScreen(new Transition(game));
-                        Helper.instance.fl=2;
+
                     }
                     else if(Helper.getInstance().fl==2 ){
                         game.setScreen(Transition.VS);}

@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.SOSGame;
+import com.mygdx.game.helper.Helper;
 
 import java.util.LinkedList;
 
@@ -35,6 +36,7 @@ public class Transition extends ScreenAdapter {
     private TextureAtlas atlas;
 
     public static VS_GameScreen VS;
+    public static Solo_Game_screen SOLO;
 
     public Transition(final SOSGame game){
         this.game=game;
@@ -117,12 +119,15 @@ public class Transition extends ScreenAdapter {
 
                     if(Main_Menu.change==1)
                     {
-                        game.setScreen(new Solo_Game_screen(game));
+                        SOLO= new Solo_Game_screen(game);
+                        game.setScreen(SOLO);
+                        Helper.instance.fl=2;
                     }
                     if(Main_Menu.change==2)
                     {
                         VS= new VS_GameScreen(game);
                         game.setScreen(VS);
+                        Helper.instance.fl=2;
                     }
 
                 }
@@ -139,12 +144,15 @@ public class Transition extends ScreenAdapter {
 
                     if(Main_Menu.change==1)
                     {
-                        game.setScreen(new Solo_Game_screen(game));
+                        SOLO= new Solo_Game_screen(game);
+                        game.setScreen(SOLO);
+                        Helper.instance.fl=2;
                     }
                     if(Main_Menu.change==2)
                     {
                         VS= new VS_GameScreen(game);
                         game.setScreen(VS);
+                        Helper.instance.fl=2;
                     }
                 }else if(btn3.isPressed()){
                     VS_GameScreen.THEBOARD=SixBoard;
@@ -159,12 +167,15 @@ public class Transition extends ScreenAdapter {
 
                     if(Main_Menu.change==1)
                     {
-                        game.setScreen(new Solo_Game_screen(game));
+                        SOLO= new Solo_Game_screen(game);
+                        game.setScreen(SOLO);
+                        Helper.instance.fl=2;
                     }
                     if(Main_Menu.change==2)
                     {
                         VS= new VS_GameScreen(game);
                         game.setScreen(VS);
+                        Helper.instance.fl=2;
                     }
                 }else if(btn4.isPressed()){
                     VS_GameScreen.THEBOARD=SevenBoard;
@@ -179,12 +190,15 @@ public class Transition extends ScreenAdapter {
 
                     if(Main_Menu.change==1)
                     {
-                        game.setScreen(new Solo_Game_screen(game));
+                        SOLO= new Solo_Game_screen(game);
+                        game.setScreen(SOLO);
+                        Helper.instance.fl=2;
                     }
                     if(Main_Menu.change==2)
                     {
                         VS= new VS_GameScreen(game);
                         game.setScreen(VS);
+                        Helper.instance.fl=2;
                     }
                 }else if(btn5.isPressed()){
                     VS_GameScreen.THEBOARD=EightBoard;
@@ -199,12 +213,15 @@ public class Transition extends ScreenAdapter {
 
                     if(Main_Menu.change==1)
                     {
-                        game.setScreen(new Solo_Game_screen(game));
+                        SOLO= new Solo_Game_screen(game);
+                        game.setScreen(SOLO);
+                        Helper.instance.fl=2;
                     }
                     if(Main_Menu.change==2)
                     {
                         VS= new VS_GameScreen(game);
                         game.setScreen(VS);
+                        Helper.instance.fl=2;
                     }
                 }
                 return false;

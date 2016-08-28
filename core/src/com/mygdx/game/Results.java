@@ -48,6 +48,6 @@ public class Results {
         return winner;
     }
     public Boolean ISgameOver( ) {
-        return getResults() == state.WINNER || board.emptyCellPositions().size() == 0;
+        return board.emptyCellPositions().size() == 0;
     }
 }
