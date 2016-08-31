@@ -7,7 +7,7 @@ import com.mygdx.game.board.CellPosition;
 /**
  * Created by user on 8.8.2016.
  */
-public class Rule_Based {
+public class Rule_Based implements Strategy {
 
     // If I can win on this move, do it. (S0-  /S ) (S-S / O) (-OS /S)  (APPLIED RULE !!!)
     //If the other player can win on the next move, block that winning square

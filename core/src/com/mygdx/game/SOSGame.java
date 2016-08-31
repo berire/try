@@ -8,13 +8,17 @@ import com.mygdx.game.stages.Main_Menu;
 
 public class SOSGame extends Game {
 	public static final int WIDTH=480;
-	public static final int HEIGHT=760;
+	public static final int HEIGHT= 800;
+
 
 	public final static String TITLE= "SOS GAME";
 
 	public static SpriteBatch batch;
 	public static ScreenViewport view;
 	public OrthographicCamera cam;
+
+
+
 
 	public void create() {
 		view=new ScreenViewport();
