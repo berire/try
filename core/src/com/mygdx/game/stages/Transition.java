@@ -126,7 +126,7 @@ public class Transition extends ScreenAdapter {
                     {
                         SOLO= new Solo_Game_screen(game);
                         game.setScreen(SOLO);
-                        Helper.instance.fl=2;
+                        Helper.instance.f2=2;
                     }
                     if(Main_Menu.change==2)
                     {

@@ -19,11 +19,12 @@ public class Helper {
     }
 
     public ScreenType screen;
-    public int fl;
+    public int fl,f2;
 
     public Helper(){
         screen=ScreenType.MAIN;
         fl=1;
+        f2=1;
     }
 
 

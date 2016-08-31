@@ -120,10 +120,10 @@ public class Main_Menu extends ScreenAdapter {
                                      int button){
                 if(Solo_btn.isPressed()){
                     change=1;
-                    if(Helper.getInstance().fl==1){
+                    if(Helper.getInstance().f2==1){
                         game.setScreen(new Transition(game));
                     }
-                    else if(Helper.getInstance().fl==2 ){
+                    else if(Helper.getInstance().f2==2 ){
                         game.setScreen(Transition.SOLO);}
                 }
                 if(VS_btn.isPressed()){
