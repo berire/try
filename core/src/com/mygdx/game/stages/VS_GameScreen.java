@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
@@ -116,7 +117,7 @@ public class VS_GameScreen extends ScreenAdapter{
         Black_bg = new Sprite(atlas.createSprite("bg_black"));
         Blue_bg= new Sprite(atlas.createSprite("bg_blue"));
 
-        main_font=new BitmapFont(Gdx.files.internal("thefont.fnt"));
+        main_font=new BitmapFont(Gdx.files.internal("plain18.fnt"));
         other_font=new BitmapFont(Gdx.files.internal("plain28.fnt"));
 
         Button.ButtonStyle O_style_y = new Button.ButtonStyle(skin.getDrawable("o_yellow"),null,null);
@@ -212,7 +213,7 @@ public class VS_GameScreen extends ScreenAdapter{
         actorGroup.addActor(circle2);
 
         ////////BOARD SIZED AGAIN
-        THEBOARD.setSize((SOSGame.WIDTH/100)*105 , (SOSGame.HEIGHT/100)*40);
+        THEBOARD.setSize((SOSGame.WIDTH/100)*105 , (SOSGame.HEIGHT/100)*55);
 
         //CELLS-BUTTONS CREATION
         for (int a=0; a<MAX_MOVES; a++)
@@ -235,7 +236,7 @@ public class VS_GameScreen extends ScreenAdapter{
 
         //BUTTON ALIGNMENT
 
-        float y=(SOSGame.HEIGHT/100)*25;
+        float y=(SOSGame.HEIGHT/100)*20;
         float x=(SOSGame.WIDTH/100)*7;
         for(int a=0;a<row; a++ )
         {
@@ -246,7 +247,7 @@ public class VS_GameScreen extends ScreenAdapter{
                 CELLS[a][f].setWidth((THEBOARD.getHeight()/row)); //** Button Width **//
                 y=(y+(int)(THEBOARD.getHeight()/row));
             }
-            y=(SOSGame.HEIGHT/100)*25;
+            y=(SOSGame.HEIGHT/100)*20;
             x=(x+(THEBOARD.getWidth()/column));
         }
 
@@ -369,16 +370,30 @@ public class VS_GameScreen extends ScreenAdapter{
                     winner=results.getWinner();
                     if(winner==p1)
                     {
-                        crown.setSize((SOSGame.WIDTH/100)*13  , (SOSGame.HEIGHT/100)*5);
-                        crown.setPosition((SOSGame.WIDTH/100)*25,(SOSGame.HEIGHT/100)*95);
+                        crown.setSize((SOSGame.WIDTH/100)*20  , (SOSGame.HEIGHT/100)*10);
+                        crown.setPosition((SOSGame.WIDTH/100)*18,(SOSGame.HEIGHT/100)*92);
                         actorGroup.addActor(crown);
 
                     }else if(winner==p2)
                     {
-                        crown.setSize((SOSGame.WIDTH/100)*13  , (SOSGame.HEIGHT/100)*5);
-                        crown.setPosition((SOSGame.WIDTH/100)*85,(SOSGame.HEIGHT/100)*95);
+                        crown.setSize((SOSGame.WIDTH/100)*20  , (SOSGame.HEIGHT/100)*10);
+                        crown.setPosition((SOSGame.WIDTH/100)*84,(SOSGame.HEIGHT/100)*92);
                         actorGroup.addActor(crown);
                     }
+
+                    O_blue.setVisible(false);
+                    S_blue.setVisible(false);
+                    circle1.setVisible(false);
+                    circle2.setVisible(false);
+
+                    Label.LabelStyle Labelstyle= new Label.LabelStyle(main_font,Color.WHITE);
+                    Label end=new Label("Game Over! The Winner is "+winner.getName(), Labelstyle);
+                    end.setSize(end.getMinWidth(),end.getMinHeight());
+                    end.setPosition((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
+                    actorGroup.addActor(end);
+
+                    backButton.setPosition((SOSGame.WIDTH/100)*38,(SOSGame.HEIGHT/100)*2);
+                    renewButton.setPosition((SOSGame.WIDTH/100)*62,(SOSGame.HEIGHT/100)*2);
                 }
                 return false;
             }
@@ -400,10 +415,9 @@ public class VS_GameScreen extends ScreenAdapter{
                     {
                         System.out.println("CR_D");
                         Image image1=new Image(new SpriteDrawable(sp));
-                        image1.setColor(1f,1f,1f,1f);
                         image1.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
                         image1.setOrigin(image1.getImageWidth()/2, image1.getImageHeight()/2);
-                        image1.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*110));
+                        image1.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*102));
                         image1.rotateBy((float)45.0);
                         cross_stage.addActor(image1);
                     }
@@ -413,7 +427,7 @@ public class VS_GameScreen extends ScreenAdapter{
                         Image image4=new Image(new SpriteDrawable(sp));
                         image4.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
                         image4.setOrigin(image4.getImageWidth()/2, image4.getImageHeight()/2);
-                        image4.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*110));
+                        image4.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*102));
                         image4.rotateBy((float)135.0);
                         cross_stage.addActor(image4);
                     }
@@ -422,7 +436,7 @@ public class VS_GameScreen extends ScreenAdapter{
                         System.out.println("FL");
                         Image image2=new Image(new SpriteDrawable(sp));
                         image2.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
-                        image2.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*110));
+                        image2.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*102));
                         cross_stage.addActor(image2);
                     }
                     if(board.cells[i][g].getDegree()== Cell.CrossDegree.UD)
@@ -431,7 +445,7 @@ public class VS_GameScreen extends ScreenAdapter{
                         Image image3=new Image(new SpriteDrawable(sp));
                         image3.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
                         image3.setOrigin(image3.getImageWidth()/2, image3.getImageHeight()/2);
-                        image3.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*110));
+                        image3.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*102));
                         image3.rotateBy((float)90.0);
                         cross_stage.addActor(image3);
                     }
@@ -450,19 +464,20 @@ public class VS_GameScreen extends ScreenAdapter{
         SOSGame.batch.begin();
 
         SOSGame.batch.draw(Background,0,0);
-        SOSGame.batch.draw(THEBOARD,(SOSGame.WIDTH/100)*7,(SOSGame.HEIGHT/100)*25,(SOSGame.WIDTH/100)*105 , (SOSGame.HEIGHT/100)*40);
-        SOSGame.batch.draw(humanPlayer1,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*78);
-        SOSGame.batch.draw(vs,(SOSGame.WIDTH/100)*55,(SOSGame.HEIGHT/100)*78,(SOSGame.WIDTH/100)*14, (SOSGame.HEIGHT/100)*12);
-        SOSGame.batch.draw(humanPlayer2,(SOSGame.WIDTH/100)*81,(SOSGame.HEIGHT/100)*78);
+        SOSGame.batch.draw(THEBOARD,(SOSGame.WIDTH/100)*7,(SOSGame.HEIGHT/100)*20,(SOSGame.WIDTH/100)*105 , (SOSGame.HEIGHT/100)*55);
+        SOSGame.batch.draw(humanPlayer1,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*82);
+        SOSGame.batch.draw(vs,(SOSGame.WIDTH/100)*55,(SOSGame.HEIGHT/100)*82,(SOSGame.WIDTH/100)*14, (SOSGame.HEIGHT/100)*12);
+        SOSGame.batch.draw(humanPlayer2,(SOSGame.WIDTH/100)*81,(SOSGame.HEIGHT/100)*82);
 
-        main_font.setColor(0,(float)96.9,(float)100,(float)60);
-        main_font.setColor(Color.YELLOW);
-        main_font.draw(SOSGame.batch,ScoreName1,(SOSGame.WIDTH/100)*26,(SOSGame.HEIGHT/100)*75);
-        main_font.draw(SOSGame.batch,playerName1,(SOSGame.WIDTH/100)*11,(SOSGame.HEIGHT/100)*75);
+        main_font.setColor(Color.valueOf(("6BD6D7")));
+        main_font.draw(SOSGame.batch,ScoreName1,(SOSGame.WIDTH/100)*32,(SOSGame.HEIGHT/100)*80);
+        main_font.draw(SOSGame.batch,playerName1,(SOSGame.WIDTH/100)*14,(SOSGame.HEIGHT/100)*80);
 
-        main_font.setColor(0,(float)42,(float)83.9,(float)84.3);
-        main_font.draw(SOSGame.batch,ScoreName2,(SOSGame.WIDTH/100)*97,(SOSGame.HEIGHT/100)*75);
-        main_font.draw(SOSGame.batch,playerName2,(SOSGame.WIDTH/100)*76,(SOSGame.HEIGHT/100)*75);
+        main_font.setColor(Color.valueOf(("eb4e6b")));
+        if(Options.S_colors==Options.S_colors.Yellows)
+        {main_font.setColor(Color.valueOf(("FFFF99")));}
+        main_font.draw(SOSGame.batch,ScoreName2,(SOSGame.WIDTH/100)*98,(SOSGame.HEIGHT/100)*80);
+        main_font.draw(SOSGame.batch,playerName2,(SOSGame.WIDTH/100)*79,(SOSGame.HEIGHT/100)*80);
 
         SOSGame.batch.end();
 

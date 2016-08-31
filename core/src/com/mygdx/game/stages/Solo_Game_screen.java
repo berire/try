@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
@@ -22,7 +23,9 @@ import com.mygdx.game.board.Board;
 import com.mygdx.game.board.Cell;
 import com.mygdx.game.board.CellPosition;
 import com.mygdx.game.player.Player;
+import com.mygdx.game.strategies.Random;
 import com.mygdx.game.strategies.Rule_Based;
+import com.mygdx.game.strategies.Strategy;
 
 import java.util.LinkedList;
 
@@ -38,12 +41,12 @@ public class Solo_Game_screen extends ScreenAdapter {
     private Stage solo_stage,cross_stage;
 
     private Group actorGroup,cellGroup;
-    private BitmapFont main_font;
+    private BitmapFont main_font,other_font;
 
     //Background
     public static Sprite THEBOARD;
     private Sprite Background,Black_bg,Blue_bg,ThreeBoard,FourBoard,FiveBoard,SevenBoard,SixBoard,EightBoard,humanPlayer1,android,vs;
-    private Sprite lineBlue,lineYellow,lineRed;
+    private Sprite lineBlue,lineYellow,lineRed,player1_line,player2_line;
     private Image crown;
     private Image circle1,circle2;
 
@@ -52,12 +55,15 @@ public class Solo_Game_screen extends ScreenAdapter {
     private LinkedList<Button> buttons;
     private Button CELLS [][] ;
 
+    //////
+    ImageButton.ImageButtonStyle player1_o,player2_0,player1_s,player2_s;
+
     //GAME VALUES
     Player p1,p2,winner;
     Results results;
     static Player currentPlayer;
-    String playerName1=" ";
-    String playerName2= " ";
+    String playerName1;
+    String playerName2;
     static int countofMoves=0;
     Board board;
     public static int row;
@@ -68,14 +74,10 @@ public class Solo_Game_screen extends ScreenAdapter {
 
     private int score1,score2;
     private String ScoreName1,ScoreName2;
+    private Strategy strategy;
 
-    public Solo_Game_screen(SOSGame game ) {
+    public Solo_Game_screen (SOSGame game ) {
         this.game=game;
-
-
-        // SETTINGS GUI
-
-
         //START: GUI PART
         solo_stage=new Stage(SOSGame.view,SOSGame.batch);
         cross_stage=new Stage(SOSGame.view,SOSGame.batch);
@@ -91,19 +93,16 @@ public class Solo_Game_screen extends ScreenAdapter {
         //STABLE Texture Loading
         humanPlayer1 = new Sprite(atlas.createSprite("player"));
         humanPlayer1.setSize((SOSGame.WIDTH/100)*13  , (SOSGame.HEIGHT/100)*13);
-
         android = new Sprite(atlas.createSprite("android_new"));
         android.setSize((SOSGame.WIDTH/100)*13 , (SOSGame.HEIGHT/100)*13);
-
         crown=new Image(new Sprite(atlas.createSprite("crown")));
-
-
         vs =  new Sprite(atlas.createSprite("vs"));
         vs.setSize((SOSGame.WIDTH/100)*13 , (SOSGame.HEIGHT/100)*13);
 
         //UNSTABLE TEXTURES
         lineBlue = new Sprite(atlas.createSprite("line_blue"));
         lineYellow = new Sprite(atlas.createSprite("line_yellow"));
+        lineRed = new Sprite(atlas.createSprite("line_red"));
 
         ThreeBoard=new Sprite(atlas.createSprite("3x3"));
         FourBoard= new Sprite(atlas.createSprite("4x4"));
@@ -114,6 +113,65 @@ public class Solo_Game_screen extends ScreenAdapter {
 
         Black_bg = new Sprite(atlas.createSprite("bg_black"));
         Blue_bg= new Sprite(atlas.createSprite("bg_blue"));
+
+        main_font=new BitmapFont(Gdx.files.internal("plain18.fnt"));
+        other_font=new BitmapFont(Gdx.files.internal("plain28.fnt"));
+
+        Button.ButtonStyle O_style_y = new Button.ButtonStyle(skin.getDrawable("o_yellow"),null,null);
+        ImageButton.ImageButtonStyle style1 = new ImageButton.ImageButtonStyle(O_style_y);
+
+        Button.ButtonStyle S_style_y = new Button.ButtonStyle(skin.getDrawable("s_yellow"),null,null);
+        ImageButton.ImageButtonStyle style2 = new ImageButton.ImageButtonStyle(S_style_y);
+
+        Button.ButtonStyle O_style_r = new Button.ButtonStyle(skin.getDrawable("o_red"),null,null);
+        ImageButton.ImageButtonStyle style3 = new ImageButton.ImageButtonStyle(O_style_r);
+
+        Button.ButtonStyle S_style_r = new Button.ButtonStyle(skin.getDrawable("s_red"),null,null);
+        ImageButton.ImageButtonStyle style4 = new ImageButton.ImageButtonStyle(S_style_r);
+
+        Button.ButtonStyle S_style_b = new Button.ButtonStyle(skin.getDrawable("s_blue"),null,null);
+        ImageButton.ImageButtonStyle style5 = new ImageButton.ImageButtonStyle(S_style_b);
+
+        Button.ButtonStyle O_style_b = new Button.ButtonStyle(skin.getDrawable("o_blue"),null,null);
+        ImageButton.ImageButtonStyle style6 = new ImageButton.ImageButtonStyle(O_style_b);
+
+        // SETTINGS MANIPULATION
+
+        playerName1="AAA";
+        playerName2= "Android";
+
+        player1_o=style6;
+        player1_s=style5;
+
+        player2_s=style4;
+        player2_0=style3;
+
+        player1_line=lineBlue;
+        player2_line=lineRed;
+
+        Background=Black_bg;
+        strategy=new Random();
+
+        if(Options.Player1Name!=null)
+        {
+            playerName1=Options.Player1Name;
+        }
+        if(Options.Player2Name!=null)
+        {
+            playerName2=Options.Player2Name;
+        }
+        if(Options.B_colors==Options.BackgroundColor.Blue)
+            Background=Blue_bg;
+        if(Options.S_colors==Options.SymbolColors.Yellows)
+        {
+            player2_s=style2;
+            player2_0=style1;
+            player2_line=lineYellow;
+        }
+        if(Options.difficulty== Options.Difficulty.HARD)
+        {
+            strategy=new Rule_Based();
+        }
 
         /////////OUT BUTTONS
         buttons=new LinkedList<Button>();
@@ -152,9 +210,7 @@ public class Solo_Game_screen extends ScreenAdapter {
         actorGroup.addActor(circle2);
 
         ////////BOARD SIZED AGAIN
-        THEBOARD.setSize((SOSGame.WIDTH/100)*105 , (SOSGame.HEIGHT/100)*40);
-
-        main_font=new BitmapFont(Gdx.files.internal("thefont.fnt"));
+        THEBOARD.setSize((SOSGame.WIDTH/100)*105 , (SOSGame.HEIGHT/100)*55);
 
         //CELLS-BUTTONS CREATION
         for (int a=0; a<MAX_MOVES; a++)
@@ -172,14 +228,9 @@ public class Solo_Game_screen extends ScreenAdapter {
             for(int j=0;j<column ;j++)
                 CELLS[i][j] = buttons.get((j*row) + i);
         }
-
-        //Creating the PLAY
-        p1= new Player("ALİ",Player.Player_type.Human);
-        p2= new Player("VELİ",Player.Player_type.Human);
-
         //BUTTON ALIGNMENT
 
-        float y=(SOSGame.HEIGHT/100)*25;
+        float y=(SOSGame.HEIGHT/100)*20;
         float x=(SOSGame.WIDTH/100)*7;
         for(int a=0;a<row; a++ )
         {
@@ -190,7 +241,7 @@ public class Solo_Game_screen extends ScreenAdapter {
                 CELLS[a][f].setWidth((THEBOARD.getHeight()/row)); //** Button Width **//
                 y=(y+(int)(THEBOARD.getHeight()/row));
             }
-            y=(SOSGame.HEIGHT/100)*25;
+            y=(SOSGame.HEIGHT/100)*20;
             x=(x+(THEBOARD.getWidth()/column));
         }
 
@@ -198,6 +249,10 @@ public class Solo_Game_screen extends ScreenAdapter {
     }
 
     public void playSolo( ) {
+
+        //Creating the PLAY
+        p1= new Player(playerName1,Player.Player_type.Human);
+        p2= new Player(playerName2,Player.Player_type.Human);
 
         System.out.println("PLAY SOLO");
 
@@ -207,9 +262,17 @@ public class Solo_Game_screen extends ScreenAdapter {
         countofMoves = 0;
         currentPlayer=p1;
 
-
         score1 = 0; score2=0;
         ScoreName1 = ": 0"; ScoreName2 = ": 0";
+
+        Random random= new Random();
+        Rule_Based ruleBased=new Rule_Based();
+
+        strategy=random;
+        if(Options.difficulty== Options.Difficulty.HARD)
+        {
+            strategy=ruleBased;
+        }
 
         actorGroup.addListener(new ClickListener() {
             @Override
@@ -297,10 +360,8 @@ public class Solo_Game_screen extends ScreenAdapter {
                             {
                                 System.out.println("AI STARTS");
 
-                                Rule_Based ruleBased=new Rule_Based();
-
-                                CellPosition CP = ruleBased.determineBestPosition(board);
-                                Cell.CellValue CV = ruleBased.determineValue(board);
+                                CellPosition CP = strategy.determineBestPosition(board);
+                                Cell.CellValue CV = strategy.determineValue(board);
 
                                 board.setCell(CP,CV);
                                 CELLS[CP.getRow()][CP.getColumn()].setColor(1f,1f,1f,1f);
@@ -323,7 +384,7 @@ public class Solo_Game_screen extends ScreenAdapter {
                                 board.CROSS();
                                 Crossing(lineBlue);
                                 System.out.println("CELL POSITION "+cellPosition+" IS CROSSED "+ board.cells[i][g].ISCrossed());
-                                if(board.cellAtPosition(cellPosition).ISCrossed())
+                                if(board.cellAtPosition(CP).ISCrossed())
                                 {
                                     score2++;
                                     ScoreName2 = ": " + score2;
@@ -333,18 +394,40 @@ public class Solo_Game_screen extends ScreenAdapter {
                                 currentPlayer=p1;
 
                             }
-
                         }
-                        if(results.getResults()== Results.state.WINNER||results.getResults()== Results.state.DRAW)
-                        {
 
-                        }
+                if(results.ISgameOver()==true)
+                {
+                    winner=results.getWinner();
+                    if(winner==p1)
+                    {
+                        crown.setSize((SOSGame.WIDTH/100)*20  , (SOSGame.HEIGHT/100)*10);
+                        crown.setPosition((SOSGame.WIDTH/100)*18,(SOSGame.HEIGHT/100)*92);
+                        actorGroup.addActor(crown);
+
+                    }else if(winner==p2)
+                    {
+                        crown.setSize((SOSGame.WIDTH/100)*20  , (SOSGame.HEIGHT/100)*10);
+                        crown.setPosition((SOSGame.WIDTH/100)*84,(SOSGame.HEIGHT/100)*92);
+                        actorGroup.addActor(crown);
                     }
-                }
-                return false;
-            }
 
-        });
+                    O_blue.setVisible(false);
+                    S_blue.setVisible(false);
+                    circle1.setVisible(false);
+                    circle2.setVisible(false);
+
+                    Label.LabelStyle Labelstyle= new Label.LabelStyle(main_font,Color.WHITE);
+                    Label end=new Label("Game Over! The Winner is "+winner.getName(), Labelstyle);
+                    end.setSize(end.getMinWidth(),end.getMinHeight());
+                    end.setPosition((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
+                    actorGroup.addActor(end);
+
+                    backButton.setPosition((SOSGame.WIDTH/100)*38,(SOSGame.HEIGHT/100)*2);
+                    renewButton.setPosition((SOSGame.WIDTH/100)*62,(SOSGame.HEIGHT/100)*2);
+                }
+
+            }} return false;} });
 
         solo_stage.addActor(cellGroup);
         solo_stage.addActor(actorGroup);
@@ -361,10 +444,9 @@ public class Solo_Game_screen extends ScreenAdapter {
                     {
                         System.out.println("CR_D");
                         Image image1=new Image(new SpriteDrawable(sp));
-                        image1.setColor(1f,1f,1f,1f);
                         image1.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
                         image1.setOrigin(image1.getImageWidth()/2, image1.getImageHeight()/2);
-                        image1.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*110));
+                        image1.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*102));
                         image1.rotateBy((float)45.0);
                         cross_stage.addActor(image1);
                     }
@@ -374,7 +456,7 @@ public class Solo_Game_screen extends ScreenAdapter {
                         Image image4=new Image(new SpriteDrawable(sp));
                         image4.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
                         image4.setOrigin(image4.getImageWidth()/2, image4.getImageHeight()/2);
-                        image4.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*110));
+                        image4.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*102));
                         image4.rotateBy((float)135.0);
                         cross_stage.addActor(image4);
                     }
@@ -383,7 +465,7 @@ public class Solo_Game_screen extends ScreenAdapter {
                         System.out.println("FL");
                         Image image2=new Image(new SpriteDrawable(sp));
                         image2.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
-                        image2.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*110));
+                        image2.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*102));
                         cross_stage.addActor(image2);
                     }
                     if(board.cells[i][g].getDegree()== Cell.CrossDegree.UD)
@@ -392,7 +474,7 @@ public class Solo_Game_screen extends ScreenAdapter {
                         Image image3=new Image(new SpriteDrawable(sp));
                         image3.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
                         image3.setOrigin(image3.getImageWidth()/2, image3.getImageHeight()/2);
-                        image3.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*110));
+                        image3.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*102));
                         image3.rotateBy((float)90.0);
                         cross_stage.addActor(image3);
                     }
@@ -410,20 +492,21 @@ public class Solo_Game_screen extends ScreenAdapter {
 
         SOSGame.batch.begin();
 
-        SOSGame.batch.draw(Black_bg,0,0);
-        SOSGame.batch.draw(THEBOARD,(SOSGame.WIDTH/100)*7,(SOSGame.HEIGHT/100)*25,(SOSGame.WIDTH/100)*105 , (SOSGame.HEIGHT/100)*40);
-        SOSGame.batch.draw(humanPlayer1,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*78);
-        SOSGame.batch.draw(vs,(SOSGame.WIDTH/100)*55,(SOSGame.HEIGHT/100)*78,(SOSGame.WIDTH/100)*14, (SOSGame.HEIGHT/100)*12);
-        SOSGame.batch.draw(android,(SOSGame.WIDTH/100)*81,(SOSGame.HEIGHT/100)*78);
+        SOSGame.batch.draw(Background,0,0);
+        SOSGame.batch.draw(THEBOARD,(SOSGame.WIDTH/100)*7,(SOSGame.HEIGHT/100)*20,(SOSGame.WIDTH/100)*105 , (SOSGame.HEIGHT/100)*55);
+        SOSGame.batch.draw(humanPlayer1,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*82);
+        SOSGame.batch.draw(vs,(SOSGame.WIDTH/100)*55,(SOSGame.HEIGHT/100)*82,(SOSGame.WIDTH/100)*14, (SOSGame.HEIGHT/100)*12);
+        SOSGame.batch.draw(android,(SOSGame.WIDTH/100)*81,(SOSGame.HEIGHT/100)*82);
 
-        main_font.setColor(0,(float)96.9,(float)100,(float)60);
-        main_font.setColor(Color.YELLOW);
-        main_font.draw(SOSGame.batch,ScoreName1,(SOSGame.WIDTH/100)*26,(SOSGame.HEIGHT/100)*75);
-        main_font.draw(SOSGame.batch,playerName1,(SOSGame.WIDTH/100)*11,(SOSGame.HEIGHT/100)*75);
+        main_font.setColor(Color.valueOf(("6BD6D7")));
+        main_font.draw(SOSGame.batch,ScoreName1,(SOSGame.WIDTH/100)*32,(SOSGame.HEIGHT/100)*80);
+        main_font.draw(SOSGame.batch,playerName1,(SOSGame.WIDTH/100)*14,(SOSGame.HEIGHT/100)*80);
 
-        main_font.setColor(0,(float)42,(float)83.9,(float)84.3);
-        main_font.draw(SOSGame.batch,ScoreName2,(SOSGame.WIDTH/100)*97,(SOSGame.HEIGHT/100)*75);
-        main_font.draw(SOSGame.batch,playerName2,(SOSGame.WIDTH/100)*76,(SOSGame.HEIGHT/100)*75);
+        main_font.setColor(Color.valueOf(("eb4e6b")));
+        if(Options.S_colors==Options.S_colors.Yellows)
+        {main_font.setColor(Color.valueOf(("FFFF99")));}
+        main_font.draw(SOSGame.batch,ScoreName2,(SOSGame.WIDTH/100)*98,(SOSGame.HEIGHT/100)*80);
+        main_font.draw(SOSGame.batch,playerName2,(SOSGame.WIDTH/100)*79,(SOSGame.HEIGHT/100)*80);
 
         SOSGame.batch.end();
 

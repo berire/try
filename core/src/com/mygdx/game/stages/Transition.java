@@ -22,7 +22,7 @@ public class Transition extends ScreenAdapter {
 
     final SOSGame game;
 
-    private static Sprite Black_bg;
+    private static Sprite Background,black_bg,blue_bg;
     private Stage transition_stage;
     private BitmapFont main_font;
     private Group transitionGroup;
@@ -50,13 +50,18 @@ public class Transition extends ScreenAdapter {
         skin= new Skin();
         skin.addRegions(atlas);
 
-
-        main_font=new BitmapFont(Gdx.files.internal("thefont.fnt"));
-
-        Black_bg=new Sprite(atlas.createSprite("bg_black"));
+        main_font=new BitmapFont(Gdx.files.internal("bigfont.fnt"));
 
         TextButton.TextButtonStyle style =new TextButton.TextButtonStyle(null,null,null, main_font);
         style.fontColor= new Color(Color.WHITE);
+
+        black_bg=new Sprite(atlas.createSprite("bg_black"));
+        blue_bg=new Sprite(atlas.createSprite("bg_blue"));
+        Background=black_bg;
+        if(Options.B_colors== Options.BackgroundColor.Blue)
+        {
+            Background=blue_bg;
+        }
 
         btn1 = new TextButton("4 X 4",style);
         transitionGroup.addActor(btn1);
@@ -79,7 +84,7 @@ public class Transition extends ScreenAdapter {
         textButtons.add(btn5);
 
         int y=(SOSGame.HEIGHT/100)*31;
-        int x=(SOSGame.WIDTH/100)*40;
+        int x=(SOSGame.WIDTH/100)*47;
 
         for(int i=textButtons.size()-1; i>=0; i--)
         {
@@ -238,7 +243,7 @@ public class Transition extends ScreenAdapter {
         transition_stage.act();
 
         SOSGame.batch.begin();
-        SOSGame.batch.draw(Black_bg,0,0);
+        SOSGame.batch.draw(Background,0,0);
         SOSGame.batch.end();
 
         transition_stage.draw();

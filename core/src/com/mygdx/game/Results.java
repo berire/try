@@ -12,13 +12,14 @@ public class Results {
       WINNER,DRAW,
     }
     Board board;
-    Player p1,p2,winner;
+    Player p1,p2,winner,draw;
     int row_size,column_size=0;
     public Results(Board board, Player p1,Player p2)
     {
         this.board=board;
         this.p1=p1;
         this.p2=p2;
+        draw=new Player("WORLD PEACE",null);
         row_size=board.getNumRow();
         column_size=board.getNumColumn();
     }
@@ -44,6 +45,9 @@ public class Results {
         else if(p2.getPlayerScore(board)>p1.getPlayerScore(board))
         {
             winner=p2;
+        }else if(p1.getPlayerScore(board)== p2.getPlayerScore(board))
+        {
+            winner=draw;
         }
         return winner;
     }
