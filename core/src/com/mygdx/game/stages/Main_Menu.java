@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -26,7 +25,8 @@ import java.util.LinkedList;
  */
 public class Main_Menu extends ScreenAdapter {
     public SOSGame game;
-    Rectangle soundBounds;
+
+    public static boolean soundEnabled = true;
 
     public Stage menu_stage;
     public static int change=0;
@@ -42,9 +42,11 @@ public class Main_Menu extends ScreenAdapter {
     private TextButton Solo_btn,VS_btn,settings_btn,credits_btn,help_btn;
     private LinkedList<Button> menu_btns;
 
+
+
     public Main_Menu(final SOSGame game) {
         this.game=game;
-        soundBounds = new Rectangle(0, 0, 64, 64);
+
         menu_stage=new Stage(SOSGame.view,SOSGame.batch);
         menuGroup=new Group();
         menu_btns=new LinkedList<Button>();
@@ -105,10 +107,25 @@ public class Main_Menu extends ScreenAdapter {
             y=y+(SOSGame.HEIGHT/100)*14;
         }
 
-        sound_btn=new ImageButton(skin.getDrawable("bttn_soundON"),skin.getDrawable("bttn_soundOFF"),skin.getDrawable("bttn_soundOFF"));
+        sound_btn=new ImageButton(skin.getDrawable("bttn_soundON"),null,null);
         sound_btn.setHeight((SOSGame.HEIGHT/100)*35);
         sound_btn.setWidth((SOSGame.WIDTH/100)*30);
         sound_btn.setPosition(((SOSGame.WIDTH)-sound_btn.getWidth()),-(sound_btn.getHeight()/4));
+        sound_btn.addListener(new ClickListener() {
+           @Override
+           public void clicked(InputEvent event, float x, float y) {
+               if( getTapCount()%2 == 0) {
+                   soundEnabled=true;
+                   sound_btn.setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("bttn_soundOFF"),null,null,null,null,null));
+                   sound_btn.setHeight((SOSGame.HEIGHT/100)*35);
+                   sound_btn.setWidth((SOSGame.WIDTH/100)*30);
+               }else
+               {
+                   soundEnabled=false;
+                   sound_btn.setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("bttn_soundON"),null,null,null,null,null));
+                   sound_btn.setHeight((SOSGame.HEIGHT/100)*35);
+                   sound_btn.setWidth((SOSGame.WIDTH/100)*30);
+               }}});
         menuGroup.addActor(sound_btn);
 
         menuGroup.addListener(new ClickListener(){
@@ -119,6 +136,7 @@ public class Main_Menu extends ScreenAdapter {
                                      int pointer,
                                      int button){
                 if(Solo_btn.isPressed()){
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     change=1;
                     if(Helper.getInstance().f2==1){
                         game.setScreen(new Transition(game));
@@ -127,8 +145,8 @@ public class Main_Menu extends ScreenAdapter {
                         game.setScreen(Transition.SOLO);}
                 }
                 if(VS_btn.isPressed()){
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     change=2;
-                    //Assets.playSound(Assets.clickSound);
                     if(Helper.getInstance().fl==1){
                         game.setScreen(new Transition(game));
 
@@ -136,22 +154,23 @@ public class Main_Menu extends ScreenAdapter {
                     else if(Helper.getInstance().fl==2 ){
                         game.setScreen(Transition.VS);}
                 }if(settings_btn.isPressed()){
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     game.setScreen(new Options(game));
                 }else if(credits_btn.isPressed()){
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     game.setScreen(new Credits(game));
                 }else if(help_btn.isPressed()){
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     game.setScreen(new Help(game));
-                }else if(sound_btn.isPressed()) {
-                    /*Assets.playSound(Assets.clickSound);
-                    Settings.soundEnabled = !Settings.soundEnabled;
-                    if (Settings.soundEnabled)
-                        Assets.music.play();
-                    else
-                        Assets.music.pause();*/
                 }
                 return false;
             }
         });
+
+        /*if (soundEnabled)
+            SoundAssets.music.play();
+        else
+            SoundAssets.music.pause();*/
 
 
     }
@@ -171,7 +190,6 @@ public class Main_Menu extends ScreenAdapter {
 
         SOSGame.batch.begin();
         SOSGame.batch.draw(SOS_textField,0,(SOSGame.HEIGHT/100)*70,SOSGame.WIDTH, (SOSGame.HEIGHT/100)*35);
-        //game.batch.draw(Settings.soundEnabled ? Assets.soundOn : Assets.soundOff, 0, 0, 64, 64);
         SOSGame.batch.draw(Solo,(SOSGame.WIDTH/100)*11,Solo_btn.getY(),(SOSGame.WIDTH/100)*12, (SOSGame.HEIGHT/100)*10);
         SOSGame.batch.draw(VS,(SOSGame.WIDTH/100)*11,VS_btn.getY(),(SOSGame.WIDTH/100)*12, (SOSGame.HEIGHT/100)*10);
         SOSGame.batch.draw(settings,(SOSGame.WIDTH/100)*11,settings_btn.getY(),(SOSGame.WIDTH/100)*12, (SOSGame.HEIGHT/100)*10);

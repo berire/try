@@ -52,6 +52,6 @@ public class Results {
         return winner;
     }
     public Boolean ISgameOver( ) {
-        return board.emptyCellPositions().size() == 0;
+        return board.emptyCellPositions(board).size() == 0;
     }
 }

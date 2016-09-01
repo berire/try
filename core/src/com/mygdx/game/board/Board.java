@@ -34,12 +34,12 @@ public class Board {
     public int getNumColumn(){
         return column;
     }
-    public List<CellPosition> emptyCellPositions() {
+    public List<CellPosition> emptyCellPositions(Board board) {
         List<CellPosition> positions = new ArrayList<CellPosition>();
-        for (int i = 0; i < cells.length; i++) {
-            for (int x = 0; x < cells[i].length; x++) {
-                if (cells[i][x].value == Cell.CellValue.EMPTY) {
-                    positions.add(cells[i][x].position);
+        for (int i = 0; i < board.cells.length; i++) {
+            for (int x = 0; x < board.cells[i].length; x++) {
+                if (board.cells[i][x].value == Cell.CellValue.EMPTY) {
+                    positions.add(board.cells[i][x].position);
                 }
             }
         }

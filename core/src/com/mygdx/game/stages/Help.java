@@ -64,7 +64,8 @@ public class Help extends ScreenAdapter{
                                      int button)
             {
                 if(backbutton.isPressed())
-                {game.setScreen(new Main_Menu(game));}
+                {//SoundAssets.playSound(SoundAssets.clickSound);
+                    game.setScreen(new Main_Menu(game));}
 
                 return false;
             }});

@@ -290,18 +290,21 @@ public class Solo_Game_screen extends ScreenAdapter {
                     circle2.setVisible(false);
 
                 } else if (S_blue.isPressed()) {
-
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     choosenValue = Cell.CellValue.S_cell;
                     circle1.setVisible(false);
                     circle2.setVisible(true);
                 }else if(backButton.isPressed())
                 {
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     game.setScreen(new Main_Menu(game));
                 }else if(renewButton.isPressed())
                 {
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     game.setScreen(new Transition(game));
                 }
                 else {
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     System.out.println("Choose A Cell Value");
                 }
                 return false;
@@ -325,6 +328,7 @@ public class Solo_Game_screen extends ScreenAdapter {
                         if (board.cells[i][g].getValue() == Cell.CellValue.EMPTY )
                         {
                             if(currentPlayer==p1 && CELLS[i][g].isPressed() == true&& (choosenValue==Cell.CellValue.S_cell ||choosenValue==Cell.CellValue.O_cell)) {
+                                //SoundAssets.playSound(SoundAssets.clickSound);
                                 CELLS[i][g].setColor(1f,1f,1f,1f);
                                 System.out.println("P1 STARTS");
                                 cellPosition = new CellPosition(i, g);
@@ -343,13 +347,13 @@ public class Solo_Game_screen extends ScreenAdapter {
                                 }
 
                                 board.CROSS( );
-                                Crossing(lineYellow);
-
                                 if(board.cellAtPosition(cellPosition).ISCrossed())
                                 {
+                                    //SoundAssets.playSound(SoundAssets.clickSound);
                                     score1++;
                                     ScoreName1 = ": " + score1;
                                     p1.SCORE();
+                                    Crossing(player1_line);
                                 }
                                 countofMoves++;
 
@@ -364,6 +368,7 @@ public class Solo_Game_screen extends ScreenAdapter {
                                 Cell.CellValue CV = strategy.determineValue(board);
 
                                 board.setCell(CP,CV);
+                                //SoundAssets.playSound(SoundAssets.clickSound);
                                 CELLS[CP.getRow()][CP.getColumn()].setColor(1f,1f,1f,1f);
 
                                /* System.out.println("AI STARTS");
@@ -382,10 +387,12 @@ public class Solo_Game_screen extends ScreenAdapter {
                                     CELLS[CP.getRow()][CP.getColumn()].setSize((THEBOARD.getHeight()/row),(THEBOARD.getHeight()/column));
                                 }
                                 board.CROSS();
-                                Crossing(lineBlue);
+
                                 System.out.println("CELL POSITION "+cellPosition+" IS CROSSED "+ board.cells[i][g].ISCrossed());
                                 if(board.cellAtPosition(CP).ISCrossed())
                                 {
+                                    Crossing(player2_line);
+                                    //SoundAssets.playSound(SoundAssets.clickSound);
                                     score2++;
                                     ScoreName2 = ": " + score2;
                                     p2.SCORE();
@@ -442,9 +449,8 @@ public class Solo_Game_screen extends ScreenAdapter {
                 if (board.cells[i][g].ISCrossed()) {
                     if(board.cells[i][g].getDegree()== Cell.CrossDegree.CR_D )
                     {
-                        System.out.println("CR_D");
                         Image image1=new Image(new SpriteDrawable(sp));
-                        image1.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
+                        image1.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/5)/column);
                         image1.setOrigin(image1.getImageWidth()/2, image1.getImageHeight()/2);
                         image1.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*102));
                         image1.rotateBy((float)45.0);
@@ -452,11 +458,10 @@ public class Solo_Game_screen extends ScreenAdapter {
                     }
                     if(board.cells[i][g].getDegree()== Cell.CrossDegree.CR_U)
                     {
-                        System.out.println("CR_u");
                         Image image4=new Image(new SpriteDrawable(sp));
-                        image4.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
-                        image4.setOrigin(image4.getImageWidth()/2, image4.getImageHeight()/2);
-                        image4.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*102));
+                        image4.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/5)/column);
+                        image4.setOrigin((THEBOARD.getWidth()/row)/2, (THEBOARD.getHeight()/5)/column/2);
+                        image4.setPosition((CELLS[i][g].getX()/100)*105,((CELLS[i][g].getY()/100)*112));
                         image4.rotateBy((float)135.0);
                         cross_stage.addActor(image4);
                     }
@@ -464,18 +469,19 @@ public class Solo_Game_screen extends ScreenAdapter {
                     {
                         System.out.println("FL");
                         Image image2=new Image(new SpriteDrawable(sp));
-                        image2.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
-                        image2.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*102));
+                        image2.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/5)/column);
+                        image2.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*110));
                         cross_stage.addActor(image2);
                     }
                     if(board.cells[i][g].getDegree()== Cell.CrossDegree.UD)
                     {
                         System.out.println("UD");
                         Image image3=new Image(new SpriteDrawable(sp));
-                        image3.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/6)/column);
-                        image3.setOrigin(image3.getImageWidth()/2, image3.getImageHeight()/2);
-                        image3.setPosition((CELLS[i][g].getX()/100)*110,((CELLS[i][g].getY()/100)*102));
+                        image3.setSize((THEBOARD.getWidth()/row),(THEBOARD.getHeight()/5)/column);
+                        image3.setOrigin((THEBOARD.getWidth()/row)/2, (THEBOARD.getHeight()/5)/column/2);
+                        image3.setPosition((CELLS[i][g].getX()/100)*103,((CELLS[i][g].getY()/100)*112));
                         image3.rotateBy((float)90.0);
+
                         cross_stage.addActor(image3);
                     }
                 }}}

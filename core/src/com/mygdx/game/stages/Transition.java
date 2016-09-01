@@ -30,7 +30,7 @@ public class Transition extends ScreenAdapter {
     private LinkedList<TextButton> textButtons;
     private TextButton btn1,btn2,btn3,btn4,btn5;
 
-    public static Sprite ThreeBoard,FourBoard,FiveBoard,SevenBoard,SixBoard,EightBoard;
+    public  Sprite ThreeBoard,FourBoard,FiveBoard,SevenBoard,SixBoard,EightBoard;
 
     private Skin skin;
     private TextureAtlas atlas;
@@ -112,6 +112,7 @@ public class Transition extends ScreenAdapter {
                                      int button){
 
                 if(btn1.isPressed()){
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     VS_GameScreen.THEBOARD=FourBoard;
                     VS_GameScreen.row=4;
                     VS_GameScreen.column=4;
@@ -137,6 +138,7 @@ public class Transition extends ScreenAdapter {
 
                 }
                 else if(btn2.isPressed()){
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     VS_GameScreen.THEBOARD=FiveBoard;
                     VS_GameScreen.row=5;
                     VS_GameScreen.column=5;
@@ -160,6 +162,7 @@ public class Transition extends ScreenAdapter {
                         Helper.instance.fl=2;
                     }
                 }else if(btn3.isPressed()){
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     VS_GameScreen.THEBOARD=SixBoard;
                     VS_GameScreen.row=6;
                     VS_GameScreen.column=6;
@@ -183,6 +186,7 @@ public class Transition extends ScreenAdapter {
                         Helper.instance.fl=2;
                     }
                 }else if(btn4.isPressed()){
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     VS_GameScreen.THEBOARD=SevenBoard;
                     VS_GameScreen.row=7;
                     VS_GameScreen.column=7;
@@ -206,6 +210,7 @@ public class Transition extends ScreenAdapter {
                         Helper.instance.fl=2;
                     }
                 }else if(btn5.isPressed()){
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     VS_GameScreen.THEBOARD=EightBoard;
                     VS_GameScreen.row=8;
                     VS_GameScreen.column=8;

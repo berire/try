@@ -104,7 +104,7 @@ public class Options extends ScreenAdapter {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 Input.TextInputListener textListener1 = new Input.TextInputListener()
                 {
-
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     @Override
                     public void input(String input)
                     {
@@ -126,6 +126,7 @@ public class Options extends ScreenAdapter {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 Input.TextInputListener textListener2 = new Input.TextInputListener()
                 {
+                    //SoundAssets.playSound(SoundAssets.clickSound);
 
                     @Override
                     public void input(String input)
@@ -176,7 +177,8 @@ public class Options extends ScreenAdapter {
                                      int button)
             {
                 if(backbutton.isPressed())
-                {game.setScreen(new Main_Menu(game));}
+                {//SoundAssets.playSound(SoundAssets.clickSound);
+                    game.setScreen(new Main_Menu(game));}
 
                 return false;
             }});
@@ -185,10 +187,12 @@ public class Options extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if( getTapCount()%2 == 0) { // put breakpoint here
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     btn1.setText("DIFFICULTY: HARD");
                     difficulty=Difficulty.HARD;
                 }else
                 {
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     btn1.setText("DIFFICULTY: EASY");
                     difficulty=Difficulty.EASY;
                 }}});
@@ -196,12 +200,14 @@ public class Options extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if( getTapCount()%2 == 0) { // put breakpoint here
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     btn2.setText("BACKGROUND COLOR: BLUE");
                     B_colors= BackgroundColor.Blue;
                     Background=blue_bg;
 
                 }else
                 {
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     btn2.setText("BACKGROUND COLOR: BLACK");
                     B_colors= BackgroundColor.Black;
                     Background=black_bg;
@@ -210,11 +216,13 @@ public class Options extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if( getTapCount()%2 == 0) { // put breakpoint here
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     btn3.setText("SYMBOL COLOR: BLUE/RED");
                     S_colors= SymbolColors.Reds;
 
                 }else
                 {
+                    //SoundAssets.playSound(SoundAssets.clickSound);
                     btn3.setText("SYMBOL COLOR: BLUE/YELLOW");
                     S_colors= SymbolColors.Yellows;
                 }}});

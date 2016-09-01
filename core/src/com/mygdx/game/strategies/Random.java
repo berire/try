@@ -16,8 +16,8 @@ public class Random implements Strategy {
 
     public CellPosition determineBestPosition(Board board) {
         List<CellPosition> availableCells;
-        availableCells = board.emptyCellPositions();
-        int randomIndex = MathUtils.random(0, availableCells.size());
+        availableCells = board.emptyCellPositions(board);
+        int randomIndex = (int)(Math.random()*(availableCells.size()-1)+0);
         return availableCells.get(randomIndex);
     }
 

@@ -21,6 +21,7 @@ public class SOSGame extends Game {
 
 
 	public void create() {
+		//SoundAssets.loadSound();
 		view=new ScreenViewport();
 		batch=new SpriteBatch();
 		cam = new OrthographicCamera(WIDTH, HEIGHT);
