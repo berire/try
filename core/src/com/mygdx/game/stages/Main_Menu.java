@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.SOSGame;
-import com.mygdx.game.helper.Helper;
+import com.mygdx.game.SoundAssets;
 
 import java.util.LinkedList;
 
@@ -42,10 +42,9 @@ public class Main_Menu extends ScreenAdapter {
     private TextButton Solo_btn,VS_btn,settings_btn,credits_btn,help_btn;
     private LinkedList<Button> menu_btns;
 
-
-
     public Main_Menu(final SOSGame game) {
         this.game=game;
+
 
         menu_stage=new Stage(SOSGame.view,SOSGame.batch);
         menuGroup=new Group();
@@ -97,7 +96,7 @@ public class Main_Menu extends ScreenAdapter {
         menuGroup.addActor(help_btn);
         menu_btns.add(help_btn);
 
-        int y=(SOSGame.HEIGHT/100)*2;
+        int y=(SOSGame.HEIGHT/100)*5;
         int x=(SOSGame.WIDTH/100)*30 ;
         for(int i=menu_btns.size()-1; i>=0 ; i--)
         {
@@ -115,12 +114,14 @@ public class Main_Menu extends ScreenAdapter {
            @Override
            public void clicked(InputEvent event, float x, float y) {
                if( getTapCount()%2 == 0) {
+                   SoundAssets.music.play();
                    soundEnabled=true;
                    sound_btn.setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("bttn_soundOFF"),null,null,null,null,null));
                    sound_btn.setHeight((SOSGame.HEIGHT/100)*35);
                    sound_btn.setWidth((SOSGame.WIDTH/100)*30);
                }else
                {
+                   SoundAssets.music.pause();
                    soundEnabled=false;
                    sound_btn.setStyle(new ImageButton.ImageButtonStyle(skin.getDrawable("bttn_soundON"),null,null,null,null,null));
                    sound_btn.setHeight((SOSGame.HEIGHT/100)*35);
@@ -136,41 +137,27 @@ public class Main_Menu extends ScreenAdapter {
                                      int pointer,
                                      int button){
                 if(Solo_btn.isPressed()){
-                    //SoundAssets.playSound(SoundAssets.clickSound);
+                    SoundAssets.playSound(SoundAssets.clickSound);
                     change=1;
-                    if(Helper.getInstance().f2==1){
-                        game.setScreen(new Transition(game));
-                    }
-                    else if(Helper.getInstance().f2==2 ){
-                        game.setScreen(Transition.SOLO);}
+                    game.setScreen(new Transition(game));
                 }
                 if(VS_btn.isPressed()){
-                    //SoundAssets.playSound(SoundAssets.clickSound);
+                    SoundAssets.playSound(SoundAssets.clickSound);
                     change=2;
-                    if(Helper.getInstance().fl==1){
-                        game.setScreen(new Transition(game));
-
-                    }
-                    else if(Helper.getInstance().fl==2 ){
-                        game.setScreen(Transition.VS);}
+                    game.setScreen(new Transition(game));
                 }if(settings_btn.isPressed()){
-                    //SoundAssets.playSound(SoundAssets.clickSound);
+                    SoundAssets.playSound(SoundAssets.clickSound);
                     game.setScreen(new Options(game));
                 }else if(credits_btn.isPressed()){
-                    //SoundAssets.playSound(SoundAssets.clickSound);
+                    SoundAssets.playSound(SoundAssets.clickSound);
                     game.setScreen(new Credits(game));
                 }else if(help_btn.isPressed()){
-                    //SoundAssets.playSound(SoundAssets.clickSound);
+                    SoundAssets.playSound(SoundAssets.clickSound);
                     game.setScreen(new Help(game));
                 }
                 return false;
             }
         });
-
-        /*if (soundEnabled)
-            SoundAssets.music.play();
-        else
-            SoundAssets.music.pause();*/
 
 
     }
@@ -189,12 +176,12 @@ public class Main_Menu extends ScreenAdapter {
         SOSGame.batch.end();
 
         SOSGame.batch.begin();
-        SOSGame.batch.draw(SOS_textField,0,(SOSGame.HEIGHT/100)*70,SOSGame.WIDTH, (SOSGame.HEIGHT/100)*35);
-        SOSGame.batch.draw(Solo,(SOSGame.WIDTH/100)*11,Solo_btn.getY(),(SOSGame.WIDTH/100)*12, (SOSGame.HEIGHT/100)*10);
-        SOSGame.batch.draw(VS,(SOSGame.WIDTH/100)*11,VS_btn.getY(),(SOSGame.WIDTH/100)*12, (SOSGame.HEIGHT/100)*10);
-        SOSGame.batch.draw(settings,(SOSGame.WIDTH/100)*11,settings_btn.getY(),(SOSGame.WIDTH/100)*12, (SOSGame.HEIGHT/100)*10);
-        SOSGame.batch.draw(credits,(SOSGame.WIDTH/100)*11,credits_btn.getY(),(SOSGame.WIDTH/100)*12, (SOSGame.HEIGHT/100)*10);
-        SOSGame.batch.draw(help,(SOSGame.WIDTH/100)*11,help_btn.getY(),(SOSGame.WIDTH/100)*12, (SOSGame.HEIGHT/100)*10);
+        SOSGame.batch.draw(SOS_textField,0,(SOSGame.HEIGHT/100)*77,SOSGame.WIDTH, (SOSGame.HEIGHT/100)*35);
+        SOSGame.batch.draw(Solo,(SOSGame.WIDTH/100)*8,Solo_btn.getY()-10,(SOSGame.WIDTH/100)*16, (SOSGame.HEIGHT/100)*11);
+        SOSGame.batch.draw(VS,(SOSGame.WIDTH/100)*8,VS_btn.getY()-10,(SOSGame.WIDTH/100)*16, (SOSGame.HEIGHT/100)*11);
+        SOSGame.batch.draw(settings,(SOSGame.WIDTH/100)*8,settings_btn.getY()-10,(SOSGame.WIDTH/100)*16, (SOSGame.HEIGHT/100)*11);
+        SOSGame.batch.draw(credits,(SOSGame.WIDTH/100)*8,credits_btn.getY()-10,(SOSGame.WIDTH/100)*16, (SOSGame.HEIGHT/100)*11);
+        SOSGame.batch.draw(help,(SOSGame.WIDTH/100)*8,help_btn.getY()-10,(SOSGame.WIDTH/100)*16, (SOSGame.HEIGHT/100)*11);
 
         SOSGame.batch.end();
 

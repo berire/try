@@ -10,11 +10,12 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.SOSGame;
-import com.mygdx.game.helper.Helper;
+import com.mygdx.game.SoundAssets;
 
 import java.util.LinkedList;
 
@@ -29,14 +30,15 @@ public class Transition extends ScreenAdapter {
 
     private LinkedList<TextButton> textButtons;
     private TextButton btn1,btn2,btn3,btn4,btn5;
+    private ImageButton backbutton;
 
     public  Sprite ThreeBoard,FourBoard,FiveBoard,SevenBoard,SixBoard,EightBoard;
 
     private Skin skin;
     private TextureAtlas atlas;
 
-    public static VS_GameScreen VS;
-    public static Solo_Game_screen SOLO;
+    public VS_GameScreen VS;
+    public Solo_Game_screen SOLO;
 
     public Transition(final SOSGame game){
         this.game=game;
@@ -83,8 +85,28 @@ public class Transition extends ScreenAdapter {
         transitionGroup.addActor(btn5);
         textButtons.add(btn5);
 
+
+        backbutton=new ImageButton(skin.getDrawable("bttn_back"));
+        backbutton.setPosition((SOSGame.WIDTH/100)*45,(SOSGame.HEIGHT/100)*10);
+        backbutton.setSize((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
+        backbutton.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event,
+                                     float x,
+                                     float y,
+                                     int pointer,
+                                     int button)
+            {
+                if(backbutton.isPressed())
+                {//SoundAssets.playSound(SoundAssets.clickSound);
+                    game.setScreen(new Main_Menu(game));}
+
+                return false;
+            }});
+        transitionGroup.addActor(backbutton);
+
         int y=(SOSGame.HEIGHT/100)*31;
-        int x=(SOSGame.WIDTH/100)*47;
+        int x=(SOSGame.WIDTH/100)*40;
 
         for(int i=textButtons.size()-1; i>=0; i--)
         {
@@ -112,7 +134,7 @@ public class Transition extends ScreenAdapter {
                                      int button){
 
                 if(btn1.isPressed()){
-                    //SoundAssets.playSound(SoundAssets.clickSound);
+                    SoundAssets.playSound(SoundAssets.clickSound);
                     VS_GameScreen.THEBOARD=FourBoard;
                     VS_GameScreen.row=4;
                     VS_GameScreen.column=4;
@@ -127,18 +149,16 @@ public class Transition extends ScreenAdapter {
                     {
                         SOLO= new Solo_Game_screen(game);
                         game.setScreen(SOLO);
-                        Helper.instance.f2=2;
                     }
                     if(Main_Menu.change==2)
                     {
                         VS= new VS_GameScreen(game);
                         game.setScreen(VS);
-                        Helper.instance.fl=2;
                     }
 
                 }
                 else if(btn2.isPressed()){
-                    //SoundAssets.playSound(SoundAssets.clickSound);
+                    SoundAssets.playSound(SoundAssets.clickSound);
                     VS_GameScreen.THEBOARD=FiveBoard;
                     VS_GameScreen.row=5;
                     VS_GameScreen.column=5;
@@ -153,16 +173,15 @@ public class Transition extends ScreenAdapter {
                     {
                         SOLO= new Solo_Game_screen(game);
                         game.setScreen(SOLO);
-                        Helper.instance.fl=2;
                     }
                     if(Main_Menu.change==2)
                     {
                         VS= new VS_GameScreen(game);
                         game.setScreen(VS);
-                        Helper.instance.fl=2;
                     }
+
                 }else if(btn3.isPressed()){
-                    //SoundAssets.playSound(SoundAssets.clickSound);
+                    SoundAssets.playSound(SoundAssets.clickSound);
                     VS_GameScreen.THEBOARD=SixBoard;
                     VS_GameScreen.row=6;
                     VS_GameScreen.column=6;
@@ -177,16 +196,14 @@ public class Transition extends ScreenAdapter {
                     {
                         SOLO= new Solo_Game_screen(game);
                         game.setScreen(SOLO);
-                        Helper.instance.fl=2;
                     }
                     if(Main_Menu.change==2)
                     {
                         VS= new VS_GameScreen(game);
                         game.setScreen(VS);
-                        Helper.instance.fl=2;
                     }
                 }else if(btn4.isPressed()){
-                    //SoundAssets.playSound(SoundAssets.clickSound);
+                    SoundAssets.playSound(SoundAssets.clickSound);
                     VS_GameScreen.THEBOARD=SevenBoard;
                     VS_GameScreen.row=7;
                     VS_GameScreen.column=7;
@@ -201,16 +218,14 @@ public class Transition extends ScreenAdapter {
                     {
                         SOLO= new Solo_Game_screen(game);
                         game.setScreen(SOLO);
-                        Helper.instance.fl=2;
                     }
                     if(Main_Menu.change==2)
                     {
                         VS= new VS_GameScreen(game);
                         game.setScreen(VS);
-                        Helper.instance.fl=2;
                     }
                 }else if(btn5.isPressed()){
-                    //SoundAssets.playSound(SoundAssets.clickSound);
+                    SoundAssets.playSound(SoundAssets.clickSound);
                     VS_GameScreen.THEBOARD=EightBoard;
                     VS_GameScreen.row=8;
                     VS_GameScreen.column=8;
@@ -225,13 +240,11 @@ public class Transition extends ScreenAdapter {
                     {
                         SOLO= new Solo_Game_screen(game);
                         game.setScreen(SOLO);
-                        Helper.instance.fl=2;
                     }
                     if(Main_Menu.change==2)
                     {
                         VS= new VS_GameScreen(game);
                         game.setScreen(VS);
-                        Helper.instance.fl=2;
                     }
                 }
                 return false;

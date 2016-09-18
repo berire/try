@@ -210,7 +210,8 @@ public class Solo_Game_screen extends ScreenAdapter {
         actorGroup.addActor(circle2);
 
         ////////BOARD SIZED AGAIN
-        THEBOARD.setSize((SOSGame.WIDTH/100)*105 , (SOSGame.HEIGHT/100)*55);
+        THEBOARD.setSize((SOSGame.WIDTH/100)*93 , (SOSGame.HEIGHT/100)*55);
+
 
         //CELLS-BUTTONS CREATION
         for (int a=0; a<MAX_MOVES; a++)
@@ -230,8 +231,8 @@ public class Solo_Game_screen extends ScreenAdapter {
         }
         //BUTTON ALIGNMENT
 
-        float y=(SOSGame.HEIGHT/100)*20;
-        float x=(SOSGame.WIDTH/100)*7;
+        float y=(SOSGame.HEIGHT/100)*25;
+        float x=(SOSGame.WIDTH/100)*5;
         for(int a=0;a<row; a++ )
         {
             for(int f=0;f<column; f++)
@@ -241,7 +242,7 @@ public class Solo_Game_screen extends ScreenAdapter {
                 CELLS[a][f].setWidth((THEBOARD.getHeight()/row)); //** Button Width **//
                 y=(y+(int)(THEBOARD.getHeight()/row));
             }
-            y=(SOSGame.HEIGHT/100)*20;
+            y=(SOSGame.HEIGHT/100)*25;
             x=(x+(THEBOARD.getWidth()/column));
         }
 
@@ -499,20 +500,20 @@ public class Solo_Game_screen extends ScreenAdapter {
         SOSGame.batch.begin();
 
         SOSGame.batch.draw(Background,0,0);
-        SOSGame.batch.draw(THEBOARD,(SOSGame.WIDTH/100)*7,(SOSGame.HEIGHT/100)*20,(SOSGame.WIDTH/100)*105 , (SOSGame.HEIGHT/100)*55);
-        SOSGame.batch.draw(humanPlayer1,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*82);
-        SOSGame.batch.draw(vs,(SOSGame.WIDTH/100)*55,(SOSGame.HEIGHT/100)*82,(SOSGame.WIDTH/100)*14, (SOSGame.HEIGHT/100)*12);
-        SOSGame.batch.draw(android,(SOSGame.WIDTH/100)*81,(SOSGame.HEIGHT/100)*82);
+        SOSGame.batch.draw(THEBOARD,(SOSGame.WIDTH/100)*5,(SOSGame.HEIGHT/100)*25,(SOSGame.WIDTH/100)*93 , (SOSGame.HEIGHT/100)*55);
+        SOSGame.batch.draw(humanPlayer1,(SOSGame.WIDTH/100)*12,(SOSGame.HEIGHT/100)*88,(SOSGame.WIDTH/100)*15, (SOSGame.HEIGHT/100)*13);
+        SOSGame.batch.draw(vs,(SOSGame.WIDTH/100)*45,(SOSGame.HEIGHT/100)*85,(SOSGame.WIDTH/100)*15, (SOSGame.HEIGHT/100)*15);
+        SOSGame.batch.draw(android,(SOSGame.WIDTH/100)*75,(SOSGame.HEIGHT/100)*88,(SOSGame.WIDTH/100)*15, (SOSGame.HEIGHT/100)*13);
 
         main_font.setColor(Color.valueOf(("6BD6D7")));
-        main_font.draw(SOSGame.batch,ScoreName1,(SOSGame.WIDTH/100)*32,(SOSGame.HEIGHT/100)*80);
-        main_font.draw(SOSGame.batch,playerName1,(SOSGame.WIDTH/100)*14,(SOSGame.HEIGHT/100)*80);
+        main_font.draw(SOSGame.batch,ScoreName1,(SOSGame.WIDTH/100)*22,(SOSGame.HEIGHT/100)*86);
+        main_font.draw(SOSGame.batch,playerName1,(SOSGame.WIDTH/100)*12,(SOSGame.HEIGHT/100)*86);
 
         main_font.setColor(Color.valueOf(("eb4e6b")));
         if(Options.S_colors==Options.S_colors.Yellows)
         {main_font.setColor(Color.valueOf(("FFFF99")));}
-        main_font.draw(SOSGame.batch,ScoreName2,(SOSGame.WIDTH/100)*98,(SOSGame.HEIGHT/100)*80);
-        main_font.draw(SOSGame.batch,playerName2,(SOSGame.WIDTH/100)*79,(SOSGame.HEIGHT/100)*80);
+        main_font.draw(SOSGame.batch,ScoreName2,(SOSGame.WIDTH/100)*85,(SOSGame.HEIGHT/100)*86);
+        main_font.draw(SOSGame.batch,playerName2,(SOSGame.WIDTH/100)*75,(SOSGame.HEIGHT/100)*86);
 
         SOSGame.batch.end();
 

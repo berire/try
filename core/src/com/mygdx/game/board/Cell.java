@@ -12,10 +12,22 @@ public class Cell extends Board {
         CR_U,CR_D,FL,UD,UN
     }
 
+    public enum State{
+        B,M,E
+    }
+
+    public boolean isdrawn1=false;
+    public boolean isdrawn2=false;
+    public boolean isdrawn3=false;
+    public boolean isdrawn4=false;
+
+
+
     CrossDegree degree;
     CellPosition position;
     CellValue value;
     public Boolean isCrossed=false;
+    public State state;
 
 
     public Cell(){}
@@ -43,25 +55,28 @@ public class Cell extends Board {
 
     public CellValue getValue() {return value;}
     public CrossDegree getDegree(){
-        System.out.println("GET DEGREE");
         return this.degree;
     }
     public void setDegree(CrossDegree degree1)
     {
-        System.out.println("SET DEGREE");
         this.degree=degree1;
     }
-
     public void setValue(CellValue value){this.value=value;}
-
     public CellPosition getPosition() { return position; }
-
     public void setPosition (CellPosition p){
         position=p;
     }
-
     public boolean ISCrossed(){
         return this.isCrossed;}
+
+    public void setState(State state)
+    {
+        this.state=state;
+    }
+    public State getState()
+    {
+        return this.state;
+    }
 
     public void crossCell(){
        this.isCrossed=true;

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -49,6 +50,11 @@ public class Options extends ScreenAdapter {
     public static SymbolColors S_colors;
     public static BackgroundColor B_colors;
 
+    public static boolean Diff=true;
+    public static boolean Scolors=true;
+    public static boolean Bcolor=true;
+    public static boolean soundEnabled=true;
+
 
 
     private static Sprite Background,black_bg,blue_bg,optionsImage;
@@ -62,6 +68,36 @@ public class Options extends ScreenAdapter {
     private TextureAtlas atlas1,atlas2;
 
     private TextField.TextFieldStyle styleT;
+    public final static String file = ".superjumper";
+
+
+    public static void load () {
+        try {
+            FileHandle filehandle = Gdx.files.external(file);
+
+            String[] strings = filehandle.readString().split("\n");
+
+            Bcolor=Boolean.parseBoolean(strings[1]);
+            Scolors=Boolean.parseBoolean(strings[2]);
+            Diff=Boolean.parseBoolean(strings[3]);
+            soundEnabled = Boolean.parseBoolean(strings[0]);
+        } catch (Throwable e) {
+            // :( It's ok we have defaults
+        }
+    }
+
+    public static void save () {
+        try {
+            FileHandle filehandle = Gdx.files.external(file);
+
+            filehandle.writeString(Boolean.toString(soundEnabled)+"\n", false);
+            filehandle.writeString(Boolean.toString(Bcolor)+"\n", false);
+            filehandle.writeString(Boolean.toString(Scolors)+"\n", false);
+            filehandle.writeString(Boolean.toString(Diff)+"\n", false);
+
+        } catch (Throwable e) {
+        }
+    }
 
     public Options(final SOSGame game)
     {
@@ -153,7 +189,7 @@ public class Options extends ScreenAdapter {
         style.fontColor= new Color(Color.WHITE);
 
         backbutton=new ImageButton(skin.getDrawable("bttn_back"));
-        backbutton.setPosition((SOSGame.WIDTH/100)*50,(SOSGame.HEIGHT/100)*10);
+        backbutton.setPosition((SOSGame.WIDTH/100)*45,(SOSGame.HEIGHT/100)*10);
         backbutton.setSize((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
 
         btn1 = new TextButton("DIFFICULTY: EASY",style);

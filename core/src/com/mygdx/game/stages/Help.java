@@ -53,7 +53,7 @@ public class Help extends ScreenAdapter{
         helpImage=new Sprite(atlas1.createSprite("bttn_help"));
 
         backbutton=new ImageButton(skin.getDrawable("bttn_back"));
-        backbutton.setPosition((SOSGame.WIDTH/100)*50,(SOSGame.HEIGHT/100)*10);
+        backbutton.setPosition((SOSGame.WIDTH/100)*45,(SOSGame.HEIGHT/100)*10);
         backbutton.setSize((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
         backbutton.addListener(new ClickListener() {
             @Override
@@ -87,8 +87,8 @@ public class Help extends ScreenAdapter{
         SOSGame.batch.begin();
 
         SOSGame.batch.draw(Background,0,0);
-        SOSGame.batch.draw(helpImage,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*80);
-        big_font.draw(SOSGame.batch,help,(SOSGame.WIDTH/100)*45,(SOSGame.HEIGHT/100)*90);
+        SOSGame.batch.draw(helpImage,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*85);
+        big_font.draw(SOSGame.batch,help,(SOSGame.WIDTH/100)*40,(SOSGame.HEIGHT/100)*90);
         regular.draw(SOSGame.batch,help_text,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*70,(SOSGame.WIDTH/100)*80,20,true);
         SOSGame.batch.end();
 

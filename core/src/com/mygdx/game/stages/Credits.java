@@ -52,7 +52,7 @@ public class Credits extends ScreenAdapter {
         creditsImage=new Sprite(atlas1.createSprite("bttn_credits"));
 
         backbutton=new ImageButton(skin.getDrawable("bttn_back"));
-        backbutton.setPosition((SOSGame.WIDTH/100)*50,(SOSGame.HEIGHT/100)*10);
+        backbutton.setPosition((SOSGame.WIDTH/100)*45,(SOSGame.HEIGHT/100)*10);
         backbutton.setSize((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
         backbutton.addListener(new ClickListener() {
             @Override
@@ -86,8 +86,8 @@ public class Credits extends ScreenAdapter {
         SOSGame.batch.begin();
 
         SOSGame.batch.draw(Background,0,0);
-        SOSGame.batch.draw(creditsImage,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*80);
-        big_font.draw(SOSGame.batch,credits,(SOSGame.WIDTH/100)*45,(SOSGame.HEIGHT/100)*90);
+        SOSGame.batch.draw(creditsImage,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*85);
+        big_font.draw(SOSGame.batch,credits,(SOSGame.WIDTH/100)*40,(SOSGame.HEIGHT/100)*90);
         regular.draw(SOSGame.batch,credits_text,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*70,(SOSGame.WIDTH/100)*80,10,true);
         SOSGame.batch.end();
 
