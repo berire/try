@@ -15,23 +15,24 @@ public class Rule_Based implements Strategy {
     //Take a corner or center square if one is free.
 
     private Cell.CellValue value;
-    public static boolean isWin;
-    public Random random;
+    public boolean isWin=false;
+    public Random random=new Random();
+    public boolean isdetermined=false;
 
 
     public CellPosition determineBestPosition(Board board)
     {
-        random=new Random();
         CellPosition theposition=null;
-
         theposition=Winner(board);
 
         if(isWin)
         {
             theposition=Winner(board);
+            isdetermined=true;
         }
         else
         {
+            isdetermined=true;
             theposition=random.determineBestPosition(board);
         }
 
@@ -39,7 +40,7 @@ public class Rule_Based implements Strategy {
     }
     public Cell.CellValue determineValue(Board board)
     {
-        Cell.CellValue thevalue=null;
+        Cell.CellValue thevalue=Cell.CellValue.EMPTY;
         if(isWin)
         {
             thevalue=this.value;

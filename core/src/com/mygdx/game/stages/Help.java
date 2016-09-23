@@ -6,12 +6,14 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.SOSGame;
+import com.mygdx.game.SoundAssets;
 
 /**
  * Created by user on 31.8.2016.
@@ -21,7 +23,7 @@ public class Help extends ScreenAdapter{
 
     private static Sprite Background,black_bg,blue_bg,helpImage;
     private Stage help_stage;
-    private BitmapFont small_font,big_font, regular;
+    private BitmapFont big_font, regular;
     private ImageButton backbutton;
     private Skin skin;
     private TextureAtlas atlas1;
@@ -36,10 +38,16 @@ public class Help extends ScreenAdapter{
         atlas1=new TextureAtlas(Gdx.files.internal("guisos.pack"));
         skin= new Skin();
         skin.addRegions(atlas1);
+;
+        FreeTypeFontGenerator generator = new  FreeTypeFontGenerator(Gdx.files.internal("RightChalk11.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 56;
+        big_font = generator.generateFont(parameter);
 
-        small_font=new BitmapFont(Gdx.files.internal("small.fnt"));
-        big_font=new BitmapFont(Gdx.files.internal("bigfont.fnt"));
-        regular=new BitmapFont(Gdx.files.internal("plain18.fnt"));
+        generator = new  FreeTypeFontGenerator(Gdx.files.internal("arialbd.ttf"));
+        parameter.size = 18;
+        regular = generator.generateFont(parameter);
+        generator.dispose();
 
 
         black_bg=new Sprite(atlas1.createSprite("bg_black"));
@@ -64,7 +72,8 @@ public class Help extends ScreenAdapter{
                                      int button)
             {
                 if(backbutton.isPressed())
-                {//SoundAssets.playSound(SoundAssets.clickSound);
+                {
+                    SoundAssets.playSound(SoundAssets.clickSound);
                     game.setScreen(new Main_Menu(game));}
 
                 return false;
@@ -72,7 +81,7 @@ public class Help extends ScreenAdapter{
 
         help_stage.addActor(backbutton);
 
-        help_text="SOS Game is quite similar to TicTacToe in sense of it's game play.Players take turns to add either an S or an O to any square, with no requirement to use the same letter each turn. The object of the game is for each player to attempt to create the straight sequence S-O-S among connected squares (either diagonally,horizontally or vertically), and to create as many sequences as they can. If a player succeeds in creating an SOS, that player gets a point";
+        help_text=" SOS Game is quite similar to TicTacToe in sense of it's game play. Players take turns to add either an S or an O to any square, with no requirement to use the same letter each turn. The object of the game is for each player to attempt to create the straight sequence S-O-S among connected squares (either diagonally,horizontally or vertically), and to create as many sequences as they can. If a player succeeds in creating an SOS, that player gets a point.";
 
 
     }
@@ -86,7 +95,7 @@ public class Help extends ScreenAdapter{
 
         SOSGame.batch.begin();
 
-        SOSGame.batch.draw(Background,0,0);
+        SOSGame.batch.draw(Background,0,0,SOSGame.WIDTH,SOSGame.HEIGHT);
         SOSGame.batch.draw(helpImage,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*85);
         big_font.draw(SOSGame.batch,help,(SOSGame.WIDTH/100)*40,(SOSGame.HEIGHT/100)*90);
         regular.draw(SOSGame.batch,help_text,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*70,(SOSGame.WIDTH/100)*80,20,true);

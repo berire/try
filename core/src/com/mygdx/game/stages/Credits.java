@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.SOSGame;
+import com.mygdx.game.SoundAssets;
 
 /**
  * Created by user on 31.8.2016.
@@ -38,7 +39,7 @@ public class Credits extends ScreenAdapter {
 
         small_font=new BitmapFont(Gdx.files.internal("small.fnt"));
         big_font=new BitmapFont(Gdx.files.internal("bigfont.fnt"));
-        regular=new BitmapFont(Gdx.files.internal("plain18.fnt"));
+        regular=new BitmapFont(Gdx.files.internal("plain28.fnt"));
 
 
         black_bg=new Sprite(atlas1.createSprite("bg_black"));
@@ -63,7 +64,8 @@ public class Credits extends ScreenAdapter {
                                      int button)
             {
                 if(backbutton.isPressed())
-                {//SoundAssets.playSound(SoundAssets.clickSound);
+                {
+                    SoundAssets.playSound(SoundAssets.clickSound);
                     game.setScreen(new Main_Menu(game));}
 
                 return false;
@@ -71,7 +73,7 @@ public class Credits extends ScreenAdapter {
 
         credits_stage.addActor(backbutton);
 
-        credits_text=" Director: Özgür ALAN \n \n Graphics & Design: Serj ARDOVIC \n \n Developer: Berire GÜNDÜZ \n \n Special Thanks: Can GÜLAYDIN, Paul KAZO, Ömer BAYKAL, Ahmet ABAK, Eren TOGAY and Tülay DEMETGÜL \n \n www.sngict.com ";
+        credits_text=" Director: Ozgur ALAN \n \n Graphics & Design: Serj ARDOVIC \n \n Developer: Berire GUNDUZ \n \n Special Thanks: Can GULAYDIN,Tulay DEMETGUL \n \n www.sngict.com ";
 
 
     }
@@ -85,7 +87,7 @@ public class Credits extends ScreenAdapter {
 
         SOSGame.batch.begin();
 
-        SOSGame.batch.draw(Background,0,0);
+        SOSGame.batch.draw(Background,0,0,SOSGame.WIDTH,SOSGame.HEIGHT);
         SOSGame.batch.draw(creditsImage,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*85);
         big_font.draw(SOSGame.batch,credits,(SOSGame.WIDTH/100)*40,(SOSGame.HEIGHT/100)*90);
         regular.draw(SOSGame.batch,credits_text,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*70,(SOSGame.WIDTH/100)*80,10,true);

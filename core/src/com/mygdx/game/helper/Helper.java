@@ -20,11 +20,13 @@ public class Helper {
 
     public ScreenType screen;
     public int fl,f2;
+    public int optionsbgcolor;
 
     public Helper(){
         screen=ScreenType.MAIN;
         fl=1;
         f2=1;
+        optionsbgcolor=0;
     }
 
 

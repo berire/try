@@ -52,7 +52,7 @@ public class Transition extends ScreenAdapter {
         skin= new Skin();
         skin.addRegions(atlas);
 
-        main_font=new BitmapFont(Gdx.files.internal("bigfont.fnt"));
+        main_font=new BitmapFont(Gdx.files.internal("big2.fnt"));
 
         TextButton.TextButtonStyle style =new TextButton.TextButtonStyle(null,null,null, main_font);
         style.fontColor= new Color(Color.WHITE);
@@ -98,7 +98,7 @@ public class Transition extends ScreenAdapter {
                                      int button)
             {
                 if(backbutton.isPressed())
-                {//SoundAssets.playSound(SoundAssets.clickSound);
+                { SoundAssets.playSound(SoundAssets.clickSound);
                     game.setScreen(new Main_Menu(game));}
 
                 return false;
@@ -261,7 +261,7 @@ public class Transition extends ScreenAdapter {
         transition_stage.act();
 
         SOSGame.batch.begin();
-        SOSGame.batch.draw(Background,0,0);
+        SOSGame.batch.draw(Background,0,0,SOSGame.WIDTH,SOSGame.HEIGHT);
         SOSGame.batch.end();
 
         transition_stage.draw();

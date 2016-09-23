@@ -1,5 +1,7 @@
 package com.mygdx.game.board;
 
+import com.mygdx.game.player.Player;
+
 import java.util.LinkedList;
 
 /**
@@ -8,9 +10,9 @@ import java.util.LinkedList;
 public class Cross {
 
     public boolean isDrawn=false;
+    public Player crosser;
 
-
-    private LinkedList<Cell> crossGroup;
+    public LinkedList<Cell> crossGroup;
 
     public Cross ()
     {
@@ -21,5 +23,19 @@ public class Cross {
         crossGroup.add(a);
         crossGroup.add(b);
         crossGroup.add(c);
+    }
+    public void setCrosser (Player p1)
+    {
+        this.crosser=p1;
+    }
+
+    public Player getCrosser()
+    {
+        return  this.crosser;
+    }
+
+    public LinkedList<Cell> getthree()
+    {
+        return crossGroup;
     }
 }

@@ -8,8 +8,8 @@ public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = SOSGame.TITLE;
-		config.width = SOSGame.WIDTH;
-		config.height = SOSGame.HEIGHT;
+		config.width = 480;
+		config.height = 760;
 		new LwjglApplication(new SOSGame(), config);
 	}
 }

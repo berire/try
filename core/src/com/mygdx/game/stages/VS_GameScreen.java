@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
-import com.mygdx.game.Results;
 import com.mygdx.game.SOSGame;
 import com.mygdx.game.SoundAssets;
 import com.mygdx.game.board.Board;
@@ -28,6 +27,7 @@ import com.mygdx.game.strategies.Random;
 import com.mygdx.game.strategies.Rule_Based;
 import com.mygdx.game.strategies.Strategy;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -57,15 +57,11 @@ public class VS_GameScreen extends ScreenAdapter{
     private Button CELLS [][] ;
 
     //////
-
-    private Button.ButtonStyle  O_style_y, O_style_r, O_style_b, S_style_y, S_style_r, S_style_b;
-    private ImageButton.ImageButtonStyle style1,style2,style3,style4,style5,style6;
     ImageButton.ImageButtonStyle player1_o,player2_0,player1_s,player2_s;
 
 
     //GAME VALUES
     Player p1,p2,winner;
-    Results results;
     static Player currentPlayer;
     String playerName1;
     String playerName2;
@@ -97,12 +93,28 @@ public class VS_GameScreen extends ScreenAdapter{
         cellGroup=new Group();
 
 
+        renewButton=new ImageButton(skin.getDrawable("bttn_replay"));
+        renewButton.setSize((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
+        renewButton.setPosition((SOSGame.WIDTH-renewButton.getWidth()),0);
+        actorGroup.addActor(renewButton);
+
+        backButton=new ImageButton(skin.getDrawable("bttn_back"));
+        backButton.setPosition(0,0);
+        backButton.setSize((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
+        actorGroup.addActor(backButton);
+
+        ////////BOARD SIZED AGAIN
+        THEBOARD.setSize(SOSGame.WIDTH-(backButton.getWidth()+renewButton.getWidth())/2,(SOSGame.HEIGHT/100)*55);
+        THEBOARD.setPosition(backButton.getX()+backButton.getWidth()/2,(SOSGame.HEIGHT/100)*25);
+
         //STABLE Texture Loading
         humanPlayer1 = new Sprite(atlas.createSprite("player"));
-        humanPlayer1.setSize((SOSGame.WIDTH/100)*13  , (SOSGame.HEIGHT/100)*13);
+        humanPlayer1.setPosition((SOSGame.WIDTH/100)*12,(SOSGame.HEIGHT/100)*88);
+        humanPlayer1.setSize((SOSGame.WIDTH/100)*11  , (SOSGame.HEIGHT/100)*11);
 
         humanPlayer2 = new Sprite(atlas.createSprite("player"));
-        humanPlayer2.setSize((SOSGame.WIDTH/100)*13 , (SOSGame.HEIGHT/100)*13);
+        humanPlayer2.setPosition((SOSGame.WIDTH/100)*75,(SOSGame.HEIGHT/100)*88);
+        humanPlayer2.setSize((SOSGame.WIDTH/100)*11 , (SOSGame.HEIGHT/100)*11);
 
         crown=new Image(new Sprite(atlas.createSprite("crown")));
 
@@ -128,35 +140,32 @@ public class VS_GameScreen extends ScreenAdapter{
         main_font=new BitmapFont(Gdx.files.internal("plain18.fnt"));
         other_font=new BitmapFont(Gdx.files.internal("plain28.fnt"));
 
+        Button.ButtonStyle O_style_y = new Button.ButtonStyle(skin.getDrawable("o_yellow"),null,null);
+        ImageButton.ImageButtonStyle style1 = new ImageButton.ImageButtonStyle(O_style_y);
 
-        O_style_y = new Button.ButtonStyle(skin.getDrawable("o_yellow"),null,null);
-        style1 = new ImageButton.ImageButtonStyle(O_style_y);
+        Button.ButtonStyle S_style_y = new Button.ButtonStyle(skin.getDrawable("s_yellow"),null,null);
+        ImageButton.ImageButtonStyle style2 = new ImageButton.ImageButtonStyle(S_style_y);
 
+        Button.ButtonStyle O_style_r = new Button.ButtonStyle(skin.getDrawable("o_red"),null,null);
+        ImageButton.ImageButtonStyle style3 = new ImageButton.ImageButtonStyle(O_style_r);
 
-        S_style_y = new Button.ButtonStyle(skin.getDrawable("s_yellow"),null,null);
-        style2 = new ImageButton.ImageButtonStyle(S_style_y);
+        Button.ButtonStyle S_style_r = new Button.ButtonStyle(skin.getDrawable("s_red"),null,null);
+        ImageButton.ImageButtonStyle style4 = new ImageButton.ImageButtonStyle(S_style_r);
 
-        O_style_r = new Button.ButtonStyle(skin.getDrawable("o_red"),null,null);
-        style3 = new ImageButton.ImageButtonStyle(O_style_r);
+        Button.ButtonStyle S_style_b = new Button.ButtonStyle(skin.getDrawable("s_blue"),null,null);
+        ImageButton.ImageButtonStyle style5 = new ImageButton.ImageButtonStyle(S_style_b);
 
-        S_style_r = new Button.ButtonStyle(skin.getDrawable("s_red"),null,null);
-        style4 = new ImageButton.ImageButtonStyle(S_style_r);
-
-        S_style_b = new Button.ButtonStyle(skin.getDrawable("s_blue"),null,null);
-        style5 = new ImageButton.ImageButtonStyle(S_style_b);
-
-        O_style_b = new Button.ButtonStyle(skin.getDrawable("o_blue"),null,null);
-        style6 = new ImageButton.ImageButtonStyle(O_style_b);
-
+        Button.ButtonStyle O_style_b = new Button.ButtonStyle(skin.getDrawable("o_blue"),null,null);
+        ImageButton.ImageButtonStyle style6 = new ImageButton.ImageButtonStyle(O_style_b);
 
         generalO=new ImageButton(skin.getDrawable("o_blue"));
-        generalO.setPosition((SOSGame.WIDTH/100)*38,(SOSGame.HEIGHT/100)*2);
+        generalO.setPosition((THEBOARD.getWidth()/100)*33,(THEBOARD.getHeight()/100)*2);
         generalO.setSize((SOSGame.WIDTH/100)*20,(SOSGame.HEIGHT/100)*20);
         actorGroup.addActor(generalO);
 
 
         generalS=new ImageButton(skin.getDrawable("s_blue"));
-        generalS.setPosition((SOSGame.WIDTH/100)*62,(SOSGame.HEIGHT/100)*2);
+        generalS.setPosition((THEBOARD.getWidth()/100)*60,(THEBOARD.getHeight()/100)*2);
         generalS.setSize((SOSGame.WIDTH/100)*20,(SOSGame.HEIGHT/100)*20);
         actorGroup.addActor(generalS);
 
@@ -202,31 +211,22 @@ public class VS_GameScreen extends ScreenAdapter{
         /////////OUT BUTTONS
         buttons=new LinkedList<Button>();
 
-        renewButton=new ImageButton(skin.getDrawable("bttn_replay"));
-        renewButton.setSize((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
-        renewButton.setPosition((SOSGame.WIDTH-renewButton.getWidth()),0);
-        actorGroup.addActor(renewButton);
 
-        backButton=new ImageButton(skin.getDrawable("bttn_back"));
-        backButton.setPosition(0,0);
-        backButton.setSize((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
-        actorGroup.addActor(backButton);
 
         circle1=new Image(new Sprite(atlas.createSprite("circle")));
         circle1.setVisible(true);
-        circle1.setPosition((SOSGame.WIDTH/100)*24,(SOSGame.HEIGHT/100)*5);
-        circle1.setSize((SOSGame.WIDTH/100)*21,(SOSGame.HEIGHT/100)*15);
+        circle1.setPosition((generalO.getX()/100)*97,(THEBOARD.getHeight()/100)*8);
+        circle1.setSize((generalO.getWidth()/100)*110,(generalO.getHeight()/100)*65);
         actorGroup.addActor(circle1);
 
 
         circle2=new Image(new Sprite(atlas.createSprite("circle")));
         circle2.setVisible(false);
-        circle2.setPosition((SOSGame.WIDTH/100)*59,(SOSGame.HEIGHT/100)*5);
-        circle2.setSize((SOSGame.WIDTH/100)*21,(SOSGame.HEIGHT/100)*15);
+        circle2.setPosition((generalS.getX()/100)*97,(THEBOARD.getHeight()/100)*8);
+        circle2.setSize((generalS.getWidth()/100)*110,(generalS.getHeight()/100)*65);
         actorGroup.addActor(circle2);
 
-        ////////BOARD SIZED AGAIN
-        THEBOARD.setSize((SOSGame.WIDTH/100)*93 , (SOSGame.HEIGHT/100)*55);
+
 
         //CELLS-BUTTONS CREATION
         for (int a=0; a<MAX_MOVES; a++)
@@ -250,18 +250,18 @@ public class VS_GameScreen extends ScreenAdapter{
         //BUTTON ALIGNMENT
 
         float y=(SOSGame.HEIGHT/100)*25;
-        float x=(SOSGame.WIDTH/100)*5;
+        float x=(SOSGame.WIDTH/100)*4;
         for(int a=0;a<row; a++ )
         {
             for(int f=0;f<column; f++)
             {
                 CELLS[a][f].setPosition(x,y); //** Button location **/
-                CELLS[a][f].setHeight((THEBOARD.getWidth()/column)); //** Button Height **//
-                CELLS[a][f].setWidth((THEBOARD.getHeight()/row)); //** Button Width **//
+                CELLS[a][f].setHeight((THEBOARD.getHeight()/column/100)*92); //** Button Height **//
+                CELLS[a][f].setWidth((THEBOARD.getWidth()/row/100)*92); //** Button Width **//
                 y=(y+(int)(THEBOARD.getHeight()/row));
             }
             y=(SOSGame.HEIGHT/100)*25;
-            x=(x+(THEBOARD.getWidth()/column));
+            x=(x+((THEBOARD.getWidth()/row/100)*95)+(THEBOARD.getWidth()/row/100)*8);
         }
 
         playSolo();
@@ -276,13 +276,11 @@ public class VS_GameScreen extends ScreenAdapter{
         System.out.println("PLAY SOLO");
 
         board = new Board(row, column);
-        results=new Results(board,p1,p2);
-
         countofMoves = 0;
         currentPlayer=p1;
 
         score1 = 0; score2=0;
-        ScoreName1 = ": 0"; ScoreName2 = ": 0";
+        ScoreName1 = " 0 "; ScoreName2 = " 0 ";
 
         actorGroup.addListener(new ClickListener() {
             @Override
@@ -292,30 +290,27 @@ public class VS_GameScreen extends ScreenAdapter{
                                      int pointer,
                                      int button) {
                 if (generalO.isPressed()) {
-                    //Assets.playSound(Assets.hitSound);
-
+                    SoundAssets.playSound(SoundAssets.chooseSound);
                     choosenValue = Cell.CellValue.O_cell;
-
                     circle1.setVisible(true);
                     circle2.setVisible(false);
 
                 } else if (generalS.isPressed()) {
-                    //SoundAssets.playSound(SoundAssets.clickSound);
+                    SoundAssets.playSound(SoundAssets.chooseSound);
                     choosenValue = Cell.CellValue.S_cell;
                     circle1.setVisible(false);
                     circle2.setVisible(true);
                 }else if(backButton.isPressed())
                 {
-                    //SoundAssets.playSound(SoundAssets.clickSound);
+                    SoundAssets.playSound(SoundAssets.clickSound);
                     game.setScreen(new Main_Menu(game));
                 }else if(renewButton.isPressed())
                 {
-                    //SoundAssets.playSound(SoundAssets.clickSound);
+                    SoundAssets.playSound(SoundAssets.clickSound);
                     game.setScreen(new VS_GameScreen(game));
                 }
                 else {
                     //SoundAssets.playSound(SoundAssets.clickSound);
-                    System.out.println("Choose A Cell Value");
                 }
                 return false;
             }
@@ -345,92 +340,102 @@ public class VS_GameScreen extends ScreenAdapter{
                                     if (choosenValue == Cell.CellValue.O_cell) {
                                         CELLS[i][g].setStyle(player1_o);
                                         SoundAssets.playSound(SoundAssets.Osound);
-                                        CELLS[i][g].setSize((THEBOARD.getHeight()/row),(THEBOARD.getHeight()/column));
+                                        CELLS[i][g].setSize((THEBOARD.getHeight()/row/100)*95,(THEBOARD.getWidth()/column/100)*95);
                                     } else if (choosenValue == Cell.CellValue.S_cell) {
                                         CELLS[i][g].setStyle(player1_s);
                                         SoundAssets.playSound(SoundAssets.Ssound);
-                                        CELLS[i][g].setSize((THEBOARD.getHeight()/row),(THEBOARD.getHeight()/column));
+                                        CELLS[i][g].setSize((THEBOARD.getHeight()/row/100)*95,(THEBOARD.getWidth()/column/100)*95);
                                     }
-                                    board.CROSS( );
+                                    board.CROSS(p1);
                                     if(board.cellAtPosition(cellPosition).ISCrossed())
                                     {
                                         SoundAssets.playSound(SoundAssets.crossSound);
-                                        score1++;
-                                        ScoreName1 = ": " + score1;
-                                        p1.SCORE();
                                         Crossing(player1_line);
                                     }
+                                    ScoreName1 = " " + score1;
+
                                     countofMoves++;
                                     currentPlayer=p2;
 
-                                    generalO.setStyle(style3);
+                                    generalO.getStyle().imageDown=skin.getDrawable("o_red");
+                                    generalO.getStyle().imageUp=skin.getDrawable("o_red");
                                     generalO.setSize((SOSGame.WIDTH/100)*20,(SOSGame.HEIGHT/100)*20);
-                                    generalS.setStyle(style4);
+
+                                    generalS.getStyle().imageDown=skin.getDrawable("s_red");
+                                    generalS.getStyle().imageUp=skin.getDrawable("s_red");
                                     generalS.setSize((SOSGame.WIDTH/100)*20,(SOSGame.HEIGHT/100)*20);
-
-
-
 
                                     if(Options.S_colors==Options.SymbolColors.Yellows)
                                     {
-                                        generalO.setStyle(style1);
+                                        generalO.getStyle().imageDown=skin.getDrawable("o_yellow");
+                                        generalO.getStyle().imageUp=skin.getDrawable("o_yellow");
                                         generalO.setSize((SOSGame.WIDTH/100)*20,(SOSGame.HEIGHT/100)*20);
-                                        generalS.setStyle(style2);
+
+                                        generalS.getStyle().imageDown=skin.getDrawable("s_yellow");
+                                        generalS.getStyle().imageUp=skin.getDrawable("s_yellow");
                                         generalS.setSize((SOSGame.WIDTH/100)*20,(SOSGame.HEIGHT/100)*20);
 
                                     }
+
+
 
                                 }
                                 else if(currentPlayer == p2)
                                 {
                                     cellPosition = new CellPosition(i, g);
                                     board.setCell(cellPosition, choosenValue);
-                                    //SoundAssets.playSound(SoundAssets.clickSound);
                                     if (choosenValue == Cell.CellValue.O_cell) {
                                         CELLS[i][g].setStyle(player2_0);
                                         SoundAssets.playSound(SoundAssets.Osound);
-                                        CELLS[i][g].setSize((THEBOARD.getHeight()/row),(THEBOARD.getHeight()/column));
+                                        CELLS[i][g].setSize((THEBOARD.getHeight()/row/100)*95,(THEBOARD.getWidth()/column/100)*95);
                                     } else if (choosenValue == Cell.CellValue.S_cell) {
                                         CELLS[i][g].setStyle(player2_s);
                                         SoundAssets.playSound(SoundAssets.Ssound);
-                                        CELLS[i][g].setSize((THEBOARD.getHeight()/row),(THEBOARD.getHeight()/column));
+                                        CELLS[i][g].setSize((THEBOARD.getHeight()/row/100)*95,(THEBOARD.getWidth()/column/100)*95);
                                     }
-                                    board.CROSS();
+                                    board.CROSS(p2);
                                     if(board.cellAtPosition(cellPosition).ISCrossed())
                                     {
                                         SoundAssets.playSound(SoundAssets.crossSound);
-                                        score2++;
-                                        ScoreName2 = ": " + score2;
-                                        p2.SCORE();
                                         Crossing(player2_line);
                                     }
+                                    ScoreName2 = " " + score2;
                                     countofMoves++;
                                     currentPlayer=p1;
 
-                                    generalO.setStyle(style6);
+                                    generalO.getStyle().imageDown=skin.getDrawable("o_blue");
+                                    generalO.getStyle().imageUp=skin.getDrawable("o_blue");
                                     generalO.setSize((SOSGame.WIDTH/100)*20,(SOSGame.HEIGHT/100)*20);
 
-                                    generalS.setStyle(style5);
+                                    generalS.getStyle().imageDown=skin.getDrawable("s_blue");
+                                    generalS.getStyle().imageUp=skin.getDrawable("s_blue");
                                     generalS.setSize((SOSGame.WIDTH/100)*20,(SOSGame.HEIGHT/100)*20);
-                                }}}
+
+                                }
+
+                            }}
                 }
 
-                if(results.ISgameOver()==true)
+                if(board.emptyCellPositions(board).size() == 0)
                 {
 
                     SoundAssets.playSound(SoundAssets.endgameSound);
-                    winner=results.getWinner();
-                    if(winner==p1)
+                    if(score1>score2)
                     {
-                        crown.setSize((SOSGame.WIDTH/100)*20  , (SOSGame.HEIGHT/100)*10);
-                        crown.setPosition((SOSGame.WIDTH/100)*18,(SOSGame.HEIGHT/100)*92);
+                        winner=p1;
+                        crown.setSize((SOSGame.WIDTH/100)*15 , (SOSGame.HEIGHT/100)*5);
+                        crown.setPosition(humanPlayer1.getX(),(humanPlayer1.getY()/100)*110); //(SOSGame.WIDTH/100)*18,(SOSGame.HEIGHT/100)*92
                         actorGroup.addActor(crown);
 
-                    }else if(winner==p2)
+                    }else if(score2>score1)
                     {
-                        crown.setSize((SOSGame.WIDTH/100)*20  , (SOSGame.HEIGHT/100)*10);
-                        crown.setPosition((SOSGame.WIDTH/100)*84,(SOSGame.HEIGHT/100)*92);
+                        winner=p2;
+                        crown.setSize((SOSGame.WIDTH/100)*15 , (SOSGame.HEIGHT/100)*5);
+                        crown.setPosition(humanPlayer2.getX(),(humanPlayer2.getY()/100)*110);
                         actorGroup.addActor(crown);
+                    }else if(score1==score2)
+                    {
+                        winner=new Player("WORLD PEACE", Player.Player_type.AI);
                     }
 
                     generalO.setVisible(false);
@@ -438,14 +443,14 @@ public class VS_GameScreen extends ScreenAdapter{
                     circle1.setVisible(false);
                     circle2.setVisible(false);
 
-                    Label.LabelStyle Labelstyle= new Label.LabelStyle(main_font,Color.WHITE);
+                    Label.LabelStyle Labelstyle= new Label.LabelStyle(other_font,Color.WHITE);
                     Label end=new Label("Game Over! The Winner is "+winner.getName(), Labelstyle);
                     end.setSize(end.getMinWidth(),end.getMinHeight());
-                    end.setPosition((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
+                    end.setPosition(THEBOARD.getX()+(THEBOARD.getWidth()/5),(SOSGame.HEIGHT/100)*15);
                     actorGroup.addActor(end);
 
-                    backButton.setPosition((SOSGame.WIDTH/100)*38,(SOSGame.HEIGHT/100)*2);
-                    renewButton.setPosition((SOSGame.WIDTH/100)*62,(SOSGame.HEIGHT/100)*2);
+                    backButton.setPosition((THEBOARD.getWidth()/100)*33,(THEBOARD.getHeight()/100)*2);
+                    renewButton.setPosition((THEBOARD.getWidth()/100)*60,(THEBOARD.getHeight()/100)*2);
                 }
                 return false;
             }
@@ -459,71 +464,100 @@ public class VS_GameScreen extends ScreenAdapter{
 
     public void Crossing(Sprite sp)
     {
-       int cnt1=0; int cnt2=0; int cnt3=0; int cnt4=0;
-        for (int i = 0; i < row; i++) {
-            for (int g = 0; g < column; g++) {
-                if (board.cells[i][g].ISCrossed()) {
-                    if (board.cells[i][g].getDegree() == Cell.CrossDegree.CR_D && board.cells[i][g].isdrawn1 == false )
+        for(int i=0;i<board.row; i++)
+        {
+            for (int g=0; g<board.column; g++)
+            {
+                Cell thecell= board.cellAtPosition(new CellPosition(i,g));
+
+                if(thecell.getValue()== Cell.CellValue.O_cell)
+                {
+                    ArrayList<Cell.CrossDegree> degrees= thecell.getdegrees();
+
+                    for(int x=0; x< degrees.size();x++)
                     {
-                        System.out.println("crd");
-
-                        System.out.println(" i: " +i + " g: " +g);
-                        Image image1 = new Image(new SpriteDrawable(sp));
-                        image1.setSize((THEBOARD.getWidth() / row), (THEBOARD.getHeight() / 5) / column);
-                        image1.setOrigin(image1.getImageWidth() / 2, image1.getImageHeight() / 2);
-                        image1.rotateBy((float) 45.0);
-
-                        image1.setPosition((CELLS[i][g].getX() / 100) * 110, ((CELLS[i][g].getY() / 100) * 102));
-
-                        cross_stage.addActor(image1);
-                        board.cells[i][g].isdrawn1 = true;
+                        System.out.println(degrees.get(x).toString());
                     }
-                    if (board.cells[i][g].getDegree() == Cell.CrossDegree.CR_U && board.cells[i][g].isdrawn2 == false )
-                    {
-
-                        System.out.println("cru");
-                        System.out.println("i: " +i + "g: " +g);
-                        Image image4 = new Image(new SpriteDrawable(sp));
-                        image4.setSize((THEBOARD.getWidth() / row) * 3, (THEBOARD.getHeight() / 5) / column);
-                        image4.setOrigin((THEBOARD.getWidth() / row) / 2, (THEBOARD.getHeight() / 5) / column / 2);
-                        image4.rotateBy((float) 135.0);
-
-                        image4.setPosition((CELLS[i][g].getX() / 100) * 105, ((CELLS[i][g].getY() / 100) * 112));
-
-                        cross_stage.addActor(image4);
-                        board.cells[i][g].isdrawn2 = true;
-                    }
-                    if (board.cells[i][g].getDegree() == Cell.CrossDegree.FL && board.cells[i][g].isdrawn3 == false)
-                    {
-                        System.out.println("FL");
-                        System.out.println("i: " +i + "g: " +g);
-
-                        Image image2 = new Image(new SpriteDrawable(sp));
-                        image2.setSize((THEBOARD.getWidth() / row) * 3, (THEBOARD.getHeight() / 5) / column);
-                        image2.setPosition((CELLS[i][g].getX() / 100) * 110, ((CELLS[i][g].getY() / 100) * 110));
-                        cross_stage.addActor(image2);
-                        board.cells[i][g].isdrawn3 = true;
-                    }
-                    if (board.cells[i][g].getDegree() == Cell.CrossDegree.UD && board.cells[i][g].isdrawn4 == false )
-                    {
-                        System.out.println("UD");
-                        System.out.println("i: " +i + "g: " +g);
-
-                        Image image3 = new Image(new SpriteDrawable(sp));
-                        image3.setSize((THEBOARD.getWidth() / row) * 3, (THEBOARD.getHeight() / 5) / column);
-                        image3.setOrigin((THEBOARD.getWidth() / row) / 2, (THEBOARD.getHeight() / 5) / column / 2);
-                        image3.rotateBy((float) 90.0);
-
-                        System.out.println("i: " +i + "g: " +g);
-                        image3.setPosition((CELLS[i][g].getX() / 100) * 103, ((CELLS[i][g].getY() / 100) * 112));
-                        System.out.println("i: " +i + "g: " +g);
-
-                        cross_stage.addActor(image3);
 
 
-                        board.cells[i][g].isdrawn4 = true;
-                    }
-                }}}
+                    if ( degrees.contains(Cell.CrossDegree.CR_D)  && thecell.isdrawn1 == false )
+                        {
+                            Image image1 = new Image(new SpriteDrawable(sp));
+                            image1.setSize((THEBOARD.getWidth()/row/10)*28, (THEBOARD.getHeight() / 8) / column);
+                            image1.setOrigin(image1.getImageWidth() / 2, image1.getImageHeight() / 2);
+                            image1.rotateBy((float) 45.0);
+                            image1.setPosition((CELLS[thecell.getPosition().getRow()][thecell.getPosition().getColumn()].getX())-(THEBOARD.getWidth()/row/2), ((CELLS[thecell.getPosition().getRow()][thecell.getPosition().getColumn()].getY()))-((THEBOARD.getHeight()/column/2)));
+                            cross_stage.addActor(image1);
+                            thecell.isdrawn1 = true;
+                            if(sp==player1_line)
+                            {
+                                score1++;
+                            }
+                            else if(sp==player2_line)
+                            {
+                                score2++;
+                            }
+                        }
+                        if ( degrees.contains(Cell.CrossDegree.CR_U)  && thecell.isdrawn2 == false )
+                        {
+                            Image image4 = new Image(new SpriteDrawable(sp));
+                            image4.setSize((THEBOARD.getWidth() / row/10)*28, (THEBOARD.getHeight() / 8) / column);
+                            image4.setPosition((CELLS[thecell.getPosition().getRow()][thecell.getPosition().getColumn()].getX())+((THEBOARD.getWidth()*3)/row/2), ((CELLS[thecell.getPosition().getRow()][thecell.getPosition().getColumn()].getY()))-(((THEBOARD.getHeight())/column/3)));
+                            image4.setOrigin(image4.getImageWidth() / 2, image4.getImageHeight() / 2);
+                            image4.rotateBy((float) 135.0);
+                            cross_stage.addActor(image4);
+                            thecell.isdrawn2 = true;
+                            if(sp==player1_line)
+                            {
+                                score1++;
+                            }
+                            else if(sp==player2_line)
+                            {
+                                score2++;
+                            }
+                        }
+                        if ( degrees.contains(Cell.CrossDegree.FL) && thecell.isdrawn3 == false)
+                        {
+                            Image image2 = new Image(new SpriteDrawable(sp));
+                            image2.setSize((THEBOARD.getWidth() / row/100)*230, (THEBOARD.getHeight() / 8) / column);
+                            image2.setPosition((CELLS[thecell.getPosition().getRow()][thecell.getPosition().getColumn()].getX())-(THEBOARD.getWidth()/row/2) , ((CELLS[thecell.getPosition().getRow()][thecell.getPosition().getColumn()].getY())+(((THEBOARD.getHeight())/column/3)) ));
+                            cross_stage.addActor(image2);
+                            thecell.isdrawn3 = true;
+                            if(sp==player1_line)
+                            {
+                                score1++;
+                            }
+                            else if(sp==player2_line)
+                            {
+                                score2++;
+                            }
+                        }
+
+                        if (degrees.contains(Cell.CrossDegree.UD) && thecell.isdrawn4 == false )
+                        {
+                            Image image3 = new Image(new SpriteDrawable(sp));
+                            image3.setSize((THEBOARD.getHeight() / row/100)*230, (THEBOARD.getHeight() / 8) / column);
+                            image3.setOrigin((THEBOARD.getWidth() / row) / 2, (THEBOARD.getHeight() / 5) / column / 2);
+                            image3.rotateBy((float) 90.0);
+                            image3.setPosition((CELLS[thecell.getPosition().getRow()][thecell.getPosition().getColumn()].getX()) , ((CELLS[thecell.getPosition().getRow()][thecell.getPosition().getColumn()].getY())-(((THEBOARD.getHeight())/column/3)) ));
+                            cross_stage.addActor(image3);
+                            thecell.isdrawn4 = true;
+                            if(sp==player1_line)
+                            {
+                                score1++;
+                            }
+                            else if(sp==player2_line)
+                            {
+                                score2++;
+                            }
+                        }
+                }
+
+            }
+        }
+
+
+
     }
 
     public void render ( float delta) {
@@ -537,21 +571,25 @@ public class VS_GameScreen extends ScreenAdapter{
 
         SOSGame.batch.begin();
 
-        SOSGame.batch.draw(Background,0,0);
-        SOSGame.batch.draw(THEBOARD,(SOSGame.WIDTH/100)*5,(SOSGame.HEIGHT/100)*25,(SOSGame.WIDTH/100)*93 , (SOSGame.HEIGHT/100)*55);
-        SOSGame.batch.draw(humanPlayer1,(SOSGame.WIDTH/100)*12,(SOSGame.HEIGHT/100)*88,(SOSGame.WIDTH/100)*15, (SOSGame.HEIGHT/100)*13);
-        SOSGame.batch.draw(vs,(SOSGame.WIDTH/100)*45,(SOSGame.HEIGHT/100)*85,(SOSGame.WIDTH/100)*15, (SOSGame.HEIGHT/100)*15);
-        SOSGame.batch.draw(humanPlayer2,(SOSGame.WIDTH/100)*75,(SOSGame.HEIGHT/100)*88,(SOSGame.WIDTH/100)*15, (SOSGame.HEIGHT/100)*13);
+        SOSGame.batch.draw(Background,0,0,SOSGame.WIDTH,SOSGame.HEIGHT);
+        SOSGame.batch.draw(THEBOARD,backButton.getX()+backButton.getWidth()/2,(SOSGame.HEIGHT/100)*25,SOSGame.WIDTH-(backButton.getWidth()+renewButton.getWidth())/2,(SOSGame.HEIGHT/100)*55);
+        SOSGame.batch.draw(humanPlayer1,(SOSGame.WIDTH/100)*12,(SOSGame.HEIGHT/100)*88,(SOSGame.WIDTH/100)*13, (SOSGame.HEIGHT/100)*13);
+        SOSGame.batch.draw(vs,(SOSGame.WIDTH/100)*45,(SOSGame.HEIGHT/100)*85,(SOSGame.WIDTH/100)*14, (SOSGame.HEIGHT/100)*15);
+        SOSGame.batch.draw(humanPlayer2,(SOSGame.WIDTH/100)*75,(SOSGame.HEIGHT/100)*88,(SOSGame.WIDTH/100)*13, (SOSGame.HEIGHT/100)*13);
 
-        main_font.setColor(Color.valueOf(("6BD6D7")));
-        main_font.draw(SOSGame.batch,ScoreName1,(SOSGame.WIDTH/100)*22,(SOSGame.HEIGHT/100)*86);
-        main_font.draw(SOSGame.batch,playerName1,(SOSGame.WIDTH/100)*12,(SOSGame.HEIGHT/100)*86);
+        other_font.setColor(Color.valueOf(("6BD6D7")));
+        other_font.draw(SOSGame.batch,playerName1,(humanPlayer1.getX()*120)/100,(SOSGame.HEIGHT/100)*86);
 
-        main_font.setColor(Color.valueOf(("eb4e6b")));
+        other_font.setColor(Color.WHITE);
+        other_font.draw(SOSGame.batch,ScoreName1,(humanPlayer1.getX()*130)/100,(SOSGame.HEIGHT/100)*83);
+
+        other_font.setColor(Color.valueOf(("eb4e6b")));
         if(Options.S_colors==Options.S_colors.Yellows)
-        {main_font.setColor(Color.valueOf(("FFFF99")));}
-        main_font.draw(SOSGame.batch,ScoreName2,(SOSGame.WIDTH/100)*85,(SOSGame.HEIGHT/100)*86);
-        main_font.draw(SOSGame.batch,playerName2,(SOSGame.WIDTH/100)*75,(SOSGame.HEIGHT/100)*86);
+        {other_font.setColor(Color.valueOf(("FFFF99")));}
+        other_font.draw(SOSGame.batch,playerName2,(humanPlayer2.getX()*104)/100,(SOSGame.HEIGHT/100)*86);
+
+        other_font.setColor(Color.WHITE);
+        other_font.draw(SOSGame.batch,ScoreName2,(humanPlayer2.getX()*108)/100,(SOSGame.HEIGHT/100)*83);
 
         SOSGame.batch.end();
 

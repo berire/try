@@ -1,19 +1,19 @@
 package com.mygdx.game.board;
 
+import java.util.ArrayList;
+
 /**
  * Created by user on 8.8.2016.
  */
 public class Cell extends Board {
+
+
     public enum CellValue {
         EMPTY, S_cell, O_cell
     }
 
     public enum CrossDegree{
-        CR_U,CR_D,FL,UD,UN
-    }
-
-    public enum State{
-        B,M,E
+        CR_U , CR_D , FL , UD , UN
     }
 
     public boolean isdrawn1=false;
@@ -27,7 +27,8 @@ public class Cell extends Board {
     CellPosition position;
     CellValue value;
     public Boolean isCrossed=false;
-    public State state;
+
+    private ArrayList<CrossDegree> degrees;
 
 
     public Cell(){}
@@ -37,6 +38,8 @@ public class Cell extends Board {
         this.position = new CellPosition(cell.position);
         this.value = cell.value;
         this.isCrossed=false;
+        this.degrees= new ArrayList<CrossDegree>();
+        degrees.add(CrossDegree.UN);
     }
 
     public Cell(CellPosition position) {
@@ -44,6 +47,7 @@ public class Cell extends Board {
         this.position = position;
         this.value = CellValue.EMPTY;
         this.isCrossed=false;
+        this.degrees= new ArrayList<CrossDegree>();
     }
 
     public Cell(CellPosition position, CellValue value) {
@@ -51,16 +55,20 @@ public class Cell extends Board {
         this.position = position;
         this.value = value;
         this.isCrossed=false;
+        this.degrees= new ArrayList<CrossDegree>();
+        degrees.add(CrossDegree.UN);
     }
 
     public CellValue getValue() {return value;}
-    public CrossDegree getDegree(){
-        return this.degree;
-    }
-    public void setDegree(CrossDegree degree1)
+    public void addDegree(CrossDegree degree)
     {
-        this.degree=degree1;
+        degrees.add(degree);
     }
+    public ArrayList<CrossDegree> getdegrees()
+    {
+        return this.degrees;
+    }
+
     public void setValue(CellValue value){this.value=value;}
     public CellPosition getPosition() { return position; }
     public void setPosition (CellPosition p){
@@ -68,16 +76,6 @@ public class Cell extends Board {
     }
     public boolean ISCrossed(){
         return this.isCrossed;}
-
-    public void setState(State state)
-    {
-        this.state=state;
-    }
-    public State getState()
-    {
-        return this.state;
-    }
-
     public void crossCell(){
        this.isCrossed=true;
     }

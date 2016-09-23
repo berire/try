@@ -7,7 +7,7 @@ import com.mygdx.game.board.Board;
  */
 public class Player {
     String playerName;
-    int playerScore;
+    int playerScore=0;
 
     public enum Player_type{
         AI,Human
@@ -31,6 +31,9 @@ public class Player {
     public Player_type getType(){
         return Ptype;
     }
-    public int getPlayerScore(Board board){return playerScore;}
-    public void SCORE() {playerScore++;}
+    public int getPlayerScore(Board board){
+        return this.playerScore;}
+    public void SCORE() {
+        this.playerScore ++;
+    }
 }
