@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -8,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 /**
  * Created by user on 22.9.2016.
  */
-public class NewButton {
+public class NewButton extends Button {
 
     Group thegroup;
     Label textpart;
@@ -20,6 +21,7 @@ public class NewButton {
     {
         thegroup=new Group();
         textpart=new Label(text,style);
+        textpart.setFontScale(56);
         imagepart=new ImageButton(image);
 
         thegroup.addActor(textpart);
@@ -32,6 +34,12 @@ public class NewButton {
     {
         imagepart.setPosition(x,y);
         textpart.setPosition((x+imagepart.getWidth()),(y+(imagepart.getHeight()/3)));
+    }
+
+    public void setSize(float x,float y)
+    {
+        imagepart.setSize(x,y);
+        textpart.setSize(textpart.getMinWidth(),textpart.getMinHeight());
     }
 
     public Group getNewButton()

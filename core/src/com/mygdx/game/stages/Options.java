@@ -8,9 +8,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -26,10 +28,11 @@ public class Options extends ScreenAdapter {
 
     SOSGame game;
 
-    public static String Player1Name;
-    public static String Player2Name;
+    public static String Player1Name="AA";
+    public static String Player2Name="BB";
     public static String sb1,sb2,sb3;
     public final String Options= "SETTINGS";
+    private Label optionsTitle;
 
 
     public enum BackgroundColor
@@ -63,29 +66,20 @@ public class Options extends ScreenAdapter {
     private TextureAtlas atlas1,atlas2;
 
     private TextField.TextFieldStyle styleT;
-    public final static String file = ".superjumper";
+
 
     public Options(final SOSGame game)
     {
         this.game=game;
         options_stage=new Stage(SOSGame.view,SOSGame.batch);
-
-        if(difficulty==Difficulty.HARD){sb1="DIFFICULTY: HARD";}else{sb1="DIFFICULTY: EASY";}
-        if(Background==blue_bg){sb2="BACKGROUND COLOR: BLUE";}else{sb2="BACKGROUND COLOR: BLACK";}
-        if(S_colors==SymbolColors.Yellows){sb3="SYMBOL COLOR: BLUE/YELLOW";}else{sb3="SYMBOL COLOR: BLUE/RED";}
-
         atlas1=new TextureAtlas(Gdx.files.internal("guisos.pack"));
         atlas2=new TextureAtlas(Gdx.files.internal("sosadd.pack"));
         skin= new Skin();
         skin.addRegions(atlas1);
         skin.addRegions(atlas2);
 
-        main_font=new BitmapFont(Gdx.files.internal("small.fnt"));
-        big_font=new BitmapFont(Gdx.files.internal("bigfont.fnt"));
-
         black_bg=new Sprite(atlas1.createSprite("bg_black"));
         blue_bg=new Sprite(atlas1.createSprite("bg_blue"));
-
 
         if(Helper.getInstance().optionsbgcolor==0)
             Background=black_bg;
@@ -93,18 +87,55 @@ public class Options extends ScreenAdapter {
             Background=blue_bg;
         else
             Background=black_bg;
+        /////////////////////////////
 
+        if(Helper.getInstance().optionssymcolor==0)
+            S_colors= SymbolColors.Reds;
+        else if(Helper.getInstance().optionssymcolor==1)
+            S_colors= SymbolColors.Yellows;
+        else
+            S_colors= SymbolColors.Reds;
+
+        ///////////////////////
+
+        if(Helper.getInstance().optionsdifficulty==0)
+            difficulty=Difficulty.EASY;
+        else if(Helper.getInstance().optionsdifficulty==1)
+            difficulty=Difficulty.HARD;
+        else
+            difficulty=Difficulty.EASY;
+
+        //////////////////////
+
+        if(difficulty==Difficulty.HARD){sb1="DIFFICULTY: HARD";}else{sb1="DIFFICULTY: EASY";}
+        if(Background==blue_bg){sb2="BACKGROUND COLOR: BLUE";}else{sb2="BACKGROUND COLOR: BLACK";}
+        if(S_colors==SymbolColors.Yellows){sb3="SYMBOL COLOR: BLUE/YELLOW";}else{sb3="SYMBOL COLOR: BLUE/RED";}
+
+
+
+        main_font=new BitmapFont(Gdx.files.internal("small.fnt"));
+
+
+        FreeTypeFontGenerator generator = new  FreeTypeFontGenerator(Gdx.files.internal("RightChalk11.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 50;
+        big_font = generator.generateFont(parameter);
+
+        Label.LabelStyle labelStyle=new Label.LabelStyle(big_font,Color.WHITE);
+        optionsTitle=new Label(Options,labelStyle);
+        optionsTitle.setFontScale(1);
+        optionsTitle.setPosition((SOSGame.WIDTH/100)*40,(SOSGame.HEIGHT/100)*87);
 
         optionsImage=new Sprite(atlas1.createSprite("bttn_settings"));
 
         styleT= new TextField.TextFieldStyle(main_font, Color.WHITE , null,null,null);
 
-        field1=new TextField("NAME 1",styleT );
-        field1.setSize(field1.getMinWidth(),field1.getMinHeight());
+        field1=new TextField("PLAYER 1 NAME: "+Player1Name,styleT);
+        field1.setSize((SOSGame.WIDTH),field1.getMinHeight());
         field1.setPosition((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*70);
 
-        field2= new TextField("NAME 2", styleT);
-        field2.setSize(field2.getMinWidth(),field2.getMinHeight());
+        field2=new TextField("PLAYER 2 NAME: "+Player2Name,styleT);
+        field2.setSize((SOSGame.WIDTH),field2.getMinHeight());
         field2.setPosition((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*60);
 
         field1.addListener(new ClickListener() {
@@ -118,47 +149,52 @@ public class Options extends ScreenAdapter {
                     public void input(String input)
                     {
                         Player1Name=input.toUpperCase();
+                        field1.setText("PLAYER 1 NAME: "+Player1Name);
+                        field1.setSize((SOSGame.WIDTH),field1.getMinHeight());
+                        field1.setPosition((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*70);
 
                     }
 
                     @Override
                     public void canceled()
                     {
-
                     }
 
                 };
                 Gdx.input.getTextInput(textListener1, "SET PLAYER 1 NAME ", "VELI", "");
-            }
 
+            }
         });
+
+
         field2.addListener(new ClickListener() {
             @Override
                 public void clicked(InputEvent event, float x, float y) {
                 Input.TextInputListener textListener2 = new Input.TextInputListener()
                 {
-
-
-
                     @Override
                     public void input(String input)
                     {
                         Player2Name=input.toUpperCase();
+                        field2.setText("PLAYER 2 NAME: "+Player2Name);
+                        field2.setSize((SOSGame.WIDTH),field2.getMinHeight());
+                        field2.setPosition((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*60);
 
                     }
 
                     @Override
+
                     public void canceled()
                     {
 
                     }
 
                 };
-                System.out.println(Player2Name);
                 Gdx.input.getTextInput(textListener2, "SET PLAYER 2 NAME", "ALI", "");
             }
 
         });
+
 
         TextButton.TextButtonStyle style =new TextButton.TextButtonStyle(null,null,null, main_font);
         style.fontColor= new Color(Color.WHITE);
@@ -202,11 +238,13 @@ public class Options extends ScreenAdapter {
                     SoundAssets.playSound(SoundAssets.chooseSound);
                     btn1.setText("DIFFICULTY: HARD");
                     difficulty=Difficulty.HARD;
+                    Helper.getInstance().optionsdifficulty=1;
 
                 }else
                 {
                     SoundAssets.playSound(SoundAssets.chooseSound);
                     btn1.setText("DIFFICULTY: EASY");
+                    Helper.getInstance().optionsdifficulty=0;
                     difficulty=Difficulty.EASY;
                 }}});
         btn2.addListener(new ClickListener() {
@@ -232,12 +270,14 @@ public class Options extends ScreenAdapter {
                 if( btn3.isChecked()) { // put breakpoint here
                     SoundAssets.playSound(SoundAssets.chooseSound);
                     btn3.setText("SYMBOL COLOR: BLUE/YELLOW");
+                    Helper.getInstance().optionssymcolor=1;
                     S_colors= SymbolColors.Yellows;
 
                 }else
                 {
                     SoundAssets.playSound(SoundAssets.chooseSound);
                     btn3.setText("SYMBOL COLOR: BLUE/RED");
+                    Helper.getInstance().optionssymcolor=0;
                     S_colors= SymbolColors.Reds;
 
 
@@ -249,6 +289,7 @@ public class Options extends ScreenAdapter {
         options_stage.addActor(backbutton);
         options_stage.addActor(field1);
         options_stage.addActor(field2);
+        options_stage.addActor(optionsTitle);
 
 
     }
@@ -260,8 +301,7 @@ public class Options extends ScreenAdapter {
         options_stage.act();
         SOSGame.batch.begin();
         SOSGame.batch.draw(Background,0,0,SOSGame.WIDTH,SOSGame.HEIGHT);
-        SOSGame.batch.draw(optionsImage,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*80);
-        big_font.draw(SOSGame.batch,Options,(SOSGame.WIDTH/100)*42,(SOSGame.HEIGHT/100)*85);
+        SOSGame.batch.draw(optionsImage,(SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*85);
         SOSGame.batch.end();
         options_stage.draw();
     }

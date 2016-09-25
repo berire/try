@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RepeatAction;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -58,8 +61,6 @@ public class VS_GameScreen extends ScreenAdapter{
 
     //////
     ImageButton.ImageButtonStyle player1_o,player2_0,player1_s,player2_s;
-
-
     //GAME VALUES
     Player p1,p2,winner;
     static Player currentPlayer;
@@ -76,22 +77,17 @@ public class VS_GameScreen extends ScreenAdapter{
     private int score1,score2;
     private String ScoreName1,ScoreName2;
     private Strategy strategy;
-
+    private static CellPosition lastplay=null;
     public VS_GameScreen(SOSGame game ) {
-
-
         this.game=game;
         //START: GUI PART
         vs_stage=new Stage(SOSGame.view,SOSGame.batch);
         cross_stage=new Stage(SOSGame.view,SOSGame.batch);
-
         atlas=new TextureAtlas(Gdx.files.internal("guisos.pack"));
         skin= new Skin ();
         skin.addRegions(atlas);
-
         actorGroup=new Group();
         cellGroup=new Group();
-
 
         renewButton=new ImageButton(skin.getDrawable("bttn_replay"));
         renewButton.setSize((SOSGame.WIDTH/100)*15,(SOSGame.HEIGHT/100)*15);
@@ -105,22 +101,22 @@ public class VS_GameScreen extends ScreenAdapter{
 
         ////////BOARD SIZED AGAIN
         THEBOARD.setSize(SOSGame.WIDTH-(backButton.getWidth()+renewButton.getWidth())/2,(SOSGame.HEIGHT/100)*55);
-        THEBOARD.setPosition(backButton.getX()+backButton.getWidth()/2,(SOSGame.HEIGHT/100)*25);
+        THEBOARD.setPosition(0+backButton.getWidth()/2,(SOSGame.HEIGHT/100)*25);
 
         //STABLE Texture Loading
         humanPlayer1 = new Sprite(atlas.createSprite("player"));
-        humanPlayer1.setPosition((SOSGame.WIDTH/100)*12,(SOSGame.HEIGHT/100)*88);
+        humanPlayer1.setPosition((THEBOARD.getX()+(THEBOARD.getWidth()/100)*10),(THEBOARD.getY()+THEBOARD.getHeight())+(THEBOARD.getHeight()/8));
         humanPlayer1.setSize((SOSGame.WIDTH/100)*11  , (SOSGame.HEIGHT/100)*11);
 
         humanPlayer2 = new Sprite(atlas.createSprite("player"));
-        humanPlayer2.setPosition((SOSGame.WIDTH/100)*75,(SOSGame.HEIGHT/100)*88);
+        humanPlayer2.setPosition((THEBOARD.getX()+(THEBOARD.getWidth()/100)*75),(THEBOARD.getY()+THEBOARD.getHeight())+(THEBOARD.getHeight()/8));
         humanPlayer2.setSize((SOSGame.WIDTH/100)*11 , (SOSGame.HEIGHT/100)*11);
 
         crown=new Image(new Sprite(atlas.createSprite("crown")));
 
-
         vs =  new Sprite(atlas.createSprite("vs"));
         vs.setSize((SOSGame.WIDTH/100)*13 , (SOSGame.HEIGHT/100)*13);
+        vs.setPosition((THEBOARD.getX()+(THEBOARD.getWidth()/100)*45),(THEBOARD.getY()+THEBOARD.getHeight())+(THEBOARD.getHeight()/8));
 
         //UNSTABLE TEXTURES
         lineBlue = new Sprite(atlas.createSprite("line_blue"));
@@ -245,6 +241,14 @@ public class VS_GameScreen extends ScreenAdapter{
                 CELLS[i][j] = buttons.get((j*row) + i);
         }
 
+        for(int i=0; i<row ;i++){
+            for(int j=0;j<column ;j++)
+                cellGroup.addActor(CELLS[i][j]);
+        }
+
+
+
+
 
 
         //BUTTON ALIGNMENT
@@ -317,7 +321,6 @@ public class VS_GameScreen extends ScreenAdapter{
         });
 
         //ACTION LISTENER
-
         cellGroup.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event,
@@ -326,17 +329,18 @@ public class VS_GameScreen extends ScreenAdapter{
                                      int pointer,
                                      int button)
             {
+                SequenceAction sequenceAction = new SequenceAction(Actions.fadeOut(0.1f),Actions.fadeIn(0.1f));
+                RepeatAction repeatAction = new RepeatAction();
+                repeatAction.setAction(sequenceAction);
+                repeatAction.setCount(RepeatAction.FOREVER);
                 for (int i = 0; i < row; i++) {
                         for (int g = 0; g < column; g++) {
                             if (CELLS[i][g].isPressed() == true && board.cells[i][g].getValue() == Cell.CellValue.EMPTY && (choosenValue==Cell.CellValue.S_cell ||choosenValue==Cell.CellValue.O_cell))
                             {
-
                                 CELLS[i][g].setColor(1f,1f,1f,1f);
-
                                 if(currentPlayer==p1) {
                                     cellPosition = new CellPosition(i, g);
                                     board.setCell(cellPosition, choosenValue);
-
                                     if (choosenValue == Cell.CellValue.O_cell) {
                                         CELLS[i][g].setStyle(player1_o);
                                         SoundAssets.playSound(SoundAssets.Osound);
@@ -353,10 +357,6 @@ public class VS_GameScreen extends ScreenAdapter{
                                         Crossing(player1_line);
                                     }
                                     ScoreName1 = " " + score1;
-
-                                    countofMoves++;
-                                    currentPlayer=p2;
-
                                     generalO.getStyle().imageDown=skin.getDrawable("o_red");
                                     generalO.getStyle().imageUp=skin.getDrawable("o_red");
                                     generalO.setSize((SOSGame.WIDTH/100)*20,(SOSGame.HEIGHT/100)*20);
@@ -374,14 +374,24 @@ public class VS_GameScreen extends ScreenAdapter{
                                         generalS.getStyle().imageDown=skin.getDrawable("s_yellow");
                                         generalS.getStyle().imageUp=skin.getDrawable("s_yellow");
                                         generalS.setSize((SOSGame.WIDTH/100)*20,(SOSGame.HEIGHT/100)*20);
-
+                                    }
+                                    if(lastplay!=null && board.cellAtPosition(lastplay).getValue()!= Cell.CellValue.EMPTY )
+                                    {
+                                        CELLS[lastplay.getRow()][lastplay.getColumn()].clearActions();
+                                        CELLS[lastplay.getRow()][lastplay.getColumn()].setColor(1f,1f,1f,1f);
                                     }
 
+                                    countofMoves++;
+                                    currentPlayer=p2;
 
+                                    CELLS[cellPosition.getRow()][cellPosition.getColumn()].addAction(repeatAction);
+                                    lastplay=cellPosition;
 
                                 }
+
                                 else if(currentPlayer == p2)
                                 {
+
                                     cellPosition = new CellPosition(i, g);
                                     board.setCell(cellPosition, choosenValue);
                                     if (choosenValue == Cell.CellValue.O_cell) {
@@ -400,9 +410,6 @@ public class VS_GameScreen extends ScreenAdapter{
                                         Crossing(player2_line);
                                     }
                                     ScoreName2 = " " + score2;
-                                    countofMoves++;
-                                    currentPlayer=p1;
-
                                     generalO.getStyle().imageDown=skin.getDrawable("o_blue");
                                     generalO.getStyle().imageUp=skin.getDrawable("o_blue");
                                     generalO.setSize((SOSGame.WIDTH/100)*20,(SOSGame.HEIGHT/100)*20);
@@ -410,10 +417,21 @@ public class VS_GameScreen extends ScreenAdapter{
                                     generalS.getStyle().imageDown=skin.getDrawable("s_blue");
                                     generalS.getStyle().imageUp=skin.getDrawable("s_blue");
                                     generalS.setSize((SOSGame.WIDTH/100)*20,(SOSGame.HEIGHT/100)*20);
+                                    countofMoves++;
+                                    currentPlayer=p1;
 
+                                    if(lastplay!=null && board.cellAtPosition(lastplay).getValue()!= Cell.CellValue.EMPTY )
+                                    {
+                                        CELLS[lastplay.getRow()][lastplay.getColumn()].clearActions();
+                                        CELLS[lastplay.getRow()][lastplay.getColumn()].setColor(1f,1f,1f,1f);
+
+                                    }
+
+                                    CELLS[cellPosition.getRow()][cellPosition.getColumn()].addAction(repeatAction);
+                                    lastplay=cellPosition;
                                 }
-
-                            }}
+                            }
+                        }
                 }
 
                 if(board.emptyCellPositions(board).size() == 0)
@@ -572,10 +590,11 @@ public class VS_GameScreen extends ScreenAdapter{
         SOSGame.batch.begin();
 
         SOSGame.batch.draw(Background,0,0,SOSGame.WIDTH,SOSGame.HEIGHT);
-        SOSGame.batch.draw(THEBOARD,backButton.getX()+backButton.getWidth()/2,(SOSGame.HEIGHT/100)*25,SOSGame.WIDTH-(backButton.getWidth()+renewButton.getWidth())/2,(SOSGame.HEIGHT/100)*55);
-        SOSGame.batch.draw(humanPlayer1,(SOSGame.WIDTH/100)*12,(SOSGame.HEIGHT/100)*88,(SOSGame.WIDTH/100)*13, (SOSGame.HEIGHT/100)*13);
-        SOSGame.batch.draw(vs,(SOSGame.WIDTH/100)*45,(SOSGame.HEIGHT/100)*85,(SOSGame.WIDTH/100)*14, (SOSGame.HEIGHT/100)*15);
-        SOSGame.batch.draw(humanPlayer2,(SOSGame.WIDTH/100)*75,(SOSGame.HEIGHT/100)*88,(SOSGame.WIDTH/100)*13, (SOSGame.HEIGHT/100)*13);
+        SOSGame.batch.draw(THEBOARD,0+backButton.getWidth()/2,(SOSGame.HEIGHT/100)*25,SOSGame.WIDTH-(backButton.getWidth()+renewButton.getWidth())/2,(SOSGame.HEIGHT/100)*55);
+
+        SOSGame.batch.draw(humanPlayer1,(THEBOARD.getX()+(THEBOARD.getWidth()/100)*10),(THEBOARD.getY()+THEBOARD.getHeight())+(THEBOARD.getHeight()/8),(SOSGame.WIDTH/100)*13, (SOSGame.HEIGHT/100)*13);
+        SOSGame.batch.draw(vs,(THEBOARD.getX()+(THEBOARD.getWidth()/100)*45),(THEBOARD.getY()+THEBOARD.getHeight())+(THEBOARD.getHeight()/8),(SOSGame.WIDTH/100)*14, (SOSGame.HEIGHT/100)*15);
+        SOSGame.batch.draw(humanPlayer2,(THEBOARD.getX()+(THEBOARD.getWidth()/100)*77),(THEBOARD.getY()+THEBOARD.getHeight())+(THEBOARD.getHeight()/8),(SOSGame.WIDTH/100)*13, (SOSGame.HEIGHT/100)*13);
 
         other_font.setColor(Color.valueOf(("6BD6D7")));
         other_font.draw(SOSGame.batch,playerName1,(humanPlayer1.getX()*120)/100,(SOSGame.HEIGHT/100)*86);
